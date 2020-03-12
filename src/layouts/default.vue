@@ -4,7 +4,7 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title>
-            ShareBank
+            ShareWallet
           </v-list-item-title>
           <v-list-item-subtitle>
             ver1.0.0

@@ -5,8 +5,8 @@ export default {
    ** Headers of the page
    */
   head: {
-    title: 'ShareBank',
-    titleTemplate: '%s - ShareBank',
+    title: 'ShareWallet',
+    titleTemplate: '%s - ShareWallet',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' }
