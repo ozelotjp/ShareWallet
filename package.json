@@ -46,7 +46,8 @@
     "husky": "^4.2.3",
     "lint-staged": "^10.0.8",
     "prettier": "^1.19.1",
-    "stylelint": "^13.2.0"
+    "stylelint": "^13.2.0",
+    "vuex-module-decorators": "^0.16.1"
   },
   "config": {
     "commitizen": {
