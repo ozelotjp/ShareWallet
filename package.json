@@ -26,9 +26,10 @@
     }
   },
   "dependencies": {
-    "@nuxtjs/vuetify": "^1.11.0",
     "@nuxt/typescript-runtime": "^0.4.0",
+    "@nuxtjs/vuetify": "^1.11.0",
     "@vue/composition-api": "^0.4.0",
+    "firebase": "^7.10.0",
     "nuxt": "^2.11.0",
     "vuex-module-decorators": "^0.16.1"
   },
@@ -44,6 +45,7 @@
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-nuxt": ">=0.5.1",
     "eslint-plugin-prettier": "^3.1.2",
+    "firebase-tools": "^7.14.0",
     "husky": "^4.2.3",
     "lint-staged": "^10.0.8",
     "prettier": "^1.19.1",
