@@ -36,7 +36,7 @@
       <v-menu offset-y bottom left>
         <template v-slot:activator="{ on }">
           <v-btn text class="text-none" v-on="on">
-            {{ currentBank.text }}
+            {{ currentWallet.text }}
             <v-icon right>
               mdi-menu-down
             </v-icon>
@@ -44,12 +44,12 @@
         </template>
         <v-list>
           <v-list-item
-            v-for="bank in bankList"
-            :key="bank.id"
-            :to="'/bank/' + bank.id"
+            v-for="wallet in walletList"
+            :key="wallet.id"
+            :to="'/wallet/' + wallet.id"
           >
             <v-list-item-title>
-              {{ bank.text }}
+              {{ wallet.text }}
             </v-list-item-title>
           </v-list-item>
         </v-list>
@@ -70,7 +70,7 @@ interface NavigationMenu {
   to: string
 }
 
-interface BankList {
+interface WalletList {
   id: string
   text: string
 }
@@ -85,19 +85,19 @@ export default defineComponent({
       { icon: 'mdi-home', text: 'Home', to: '/' }
     ] as NavigationMenu[]
 
-    const bankList = [
-      { id: '1st', text: '1st Bank' },
-      { id: '2nd', text: '2nd Bank' },
-      { id: '3rd', text: '3rd Bank' }
-    ] as BankList[]
+    const walletList = [
+      { id: '1st', text: '1st Wallet' },
+      { id: '2nd', text: '2nd Wallet' },
+      { id: '3rd', text: '3rd Wallet' }
+    ] as WalletList[]
 
-    const currentBank = { id: '1st', text: '1st Bank' } as BankList
+    const currentWallet = { id: '1st', text: '1st Wallet' } as WalletList
 
     return {
       state,
       navigationMenu,
-      bankList,
-      currentBank
+      walletList,
+      currentWallet
     }
   }
 })
