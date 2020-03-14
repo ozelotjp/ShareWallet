@@ -1,7 +1,7 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import IWallet from '~/models/Wallet'
 
-@Module({ stateFactory: true, namespaced: true, name: 'wallet' })
+@Module({ name: 'wallet', namespaced: true, stateFactory: true })
 export default class Wallet extends VuexModule {
   current = '' as string
   list = [] as IWallet[]
