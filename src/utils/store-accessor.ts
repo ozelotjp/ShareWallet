@@ -1,13 +1,13 @@
 import { Store } from 'vuex'
 import { getModule } from 'vuex-module-decorators'
-import Wallet from '~/store/wallet'
+import Group from '~/store/group'
 
 /* eslint-disable-next-line import/no-mutable-exports */
-let walletStore: Wallet
+let groupStore: Group
 /* eslint-enable */
 
 function initializeStores(store: Store<any>): void {
-  walletStore = getModule(Wallet, store)
+  groupStore = getModule(Group, store)
 }
 
-export { initializeStores, walletStore }
+export { initializeStores, groupStore }

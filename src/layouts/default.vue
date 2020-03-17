@@ -36,7 +36,7 @@
       <v-menu offset-y bottom left>
         <template v-slot:activator="{ on }">
           <v-btn text class="text-none" v-on="on">
-            {{ currentWallet.text }}
+            {{ currentGroup.text }}
             <v-icon right>
               mdi-menu-down
             </v-icon>
@@ -44,12 +44,12 @@
         </template>
         <v-list>
           <v-list-item
-            v-for="wallet in walletList"
-            :key="wallet.id"
-            :to="'/wallet/' + wallet.id"
+            v-for="group in groupList"
+            :key="group.id"
+            :to="'/group/' + group.id"
           >
             <v-list-item-title>
-              {{ wallet.text }}
+              {{ group.text }}
             </v-list-item-title>
           </v-list-item>
         </v-list>
@@ -70,7 +70,7 @@ interface NavigationMenu {
   to: string
 }
 
-interface WalletList {
+interface GroupList {
   id: string
   text: string
 }
@@ -85,19 +85,19 @@ export default defineComponent({
       { icon: 'mdi-home', text: 'Home', to: '/' }
     ] as NavigationMenu[]
 
-    const walletList = [
-      { id: '1st', text: '1st Wallet' },
-      { id: '2nd', text: '2nd Wallet' },
-      { id: '3rd', text: '3rd Wallet' }
-    ] as WalletList[]
+    const groupList = [
+      { id: '1st', text: '1st Group' },
+      { id: '2nd', text: '2nd Group' },
+      { id: '3rd', text: '3rd Group' }
+    ] as GroupList[]
 
-    const currentWallet = { id: '1st', text: '1st Wallet' } as WalletList
+    const currentGroup = { id: '1st', text: '1st Group' } as GroupList
 
     return {
       state,
       navigationMenu,
-      walletList,
-      currentWallet
+      groupList,
+      currentGroup
     }
   }
 })
