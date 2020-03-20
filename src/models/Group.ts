@@ -1,5 +1,6 @@
 export interface IGroupDocumentData {
   id: string
+  title: string
   updatedAt: firebase.firestore.Timestamp
   user: {
     [uid: string]: {
