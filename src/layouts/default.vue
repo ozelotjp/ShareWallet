@@ -33,10 +33,11 @@
     <v-app-bar app>
       <v-app-bar-nav-icon @click="state.drawer = !state.drawer" />
       <v-spacer />
+      <!--
       <v-menu offset-y bottom left>
         <template v-slot:activator="{ on }">
           <v-btn text class="text-none" v-on="on">
-            {{ currentGroup.text }}
+            {{ currentGroup.id }}
             <v-icon right>
               mdi-menu-down
             </v-icon>
@@ -49,11 +50,12 @@
             :to="'/group/' + group.id"
           >
             <v-list-item-title>
-              {{ group.text }}
+              {{ group.id }}
             </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
+      -->
     </v-app-bar>
     <v-content>
       <nuxt />
@@ -70,11 +72,6 @@ interface NavigationMenu {
   to: string
 }
 
-interface GroupList {
-  id: string
-  text: string
-}
-
 export default defineComponent({
   setup() {
     const state = reactive({
@@ -85,19 +82,9 @@ export default defineComponent({
       { icon: 'mdi-home', text: 'Home', to: '/' }
     ] as NavigationMenu[]
 
-    const groupList = [
-      { id: '1st', text: '1st Group' },
-      { id: '2nd', text: '2nd Group' },
-      { id: '3rd', text: '3rd Group' }
-    ] as GroupList[]
-
-    const currentGroup = { id: '1st', text: '1st Group' } as GroupList
-
     return {
       state,
-      navigationMenu,
-      groupList,
-      currentGroup
+      navigationMenu
     }
   }
 })
