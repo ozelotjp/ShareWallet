@@ -6,11 +6,17 @@ export default class Group extends VuexModule {
   ready = false
   list = [] as IGroupDocumentData[]
 
+  get group() {
+    return (id: string) => {
+      return this.list.filter((group) => group.id === id)[0]
+    }
   }
 
   @Mutation
   INITIALIZE_GROUP(list: IGroupDocumentData[]) {
-    this.list = list
+    list.forEach((group) => {
+      this.list.push(group)
+    })
     this.ready = true
   }
 
