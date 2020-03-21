@@ -12,6 +12,7 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
+import { authenticatedStore } from '../store'
 
 export default defineComponent({
   setup(_, { root: { $firebase, $router } }) {
@@ -20,7 +21,7 @@ export default defineComponent({
         signInWithGoogle()
         return
       }
-      $router.push('/')
+      $router.push(authenticatedStore.nextUrl || '/')
     })
 
     function signInWithGoogle() {

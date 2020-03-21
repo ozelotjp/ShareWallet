@@ -1,9 +1,10 @@
 import { Middleware } from '@nuxt/types'
-import { groupStore } from '~/store'
+import { groupStore, authenticatedStore } from '~/store'
 import { IGroupDocumentData } from '~/models/Group'
 
-const myMiddleware: Middleware = ({ redirect, app: { $firebase } }) => {
+const myMiddleware: Middleware = ({ redirect, route, app: { $firebase } }) => {
   if ($firebase.auth().currentUser === null) {
+    authenticatedStore.setNextUrl(route.path)
     redirect('/signin')
     return
   }
