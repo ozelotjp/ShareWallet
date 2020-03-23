@@ -14,9 +14,12 @@ export interface IGroupDocumentData {
 export interface IGroupHistoryDocumentData {
   id: string
   author: string
-  change: {
-    [uid: string]: number
-  }
   createdAt: firebase.firestore.Timestamp
   title: string
+  user: {
+    [uid: string]: {
+      change: number
+      wallet: number
+    }
+  }
 }
