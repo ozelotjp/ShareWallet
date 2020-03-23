@@ -2,7 +2,7 @@ export interface IGroupDocumentData {
   id: string
   title: string
   updatedAt: firebase.firestore.Timestamp
-  user: {
+  users: {
     [uid: string]: {
       name: string
       role: 'owner' | 'moderator' | 'write' | 'read'
