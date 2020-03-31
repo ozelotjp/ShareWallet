@@ -28,34 +28,26 @@
             {{ item.text }}
           </v-list-item-content>
         </v-list-item>
+        <v-list-item
+          v-for="group in groupList"
+          :key="group.id"
+          :to="'/group/' + group.id"
+          link
+        >
+          <v-list-item-icon>
+            <v-icon>
+              mdi-wallet
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            {{ group.title }}
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar app>
       <v-app-bar-nav-icon @click="state.drawer = !state.drawer" />
       <v-spacer />
-      <!--
-      <v-menu offset-y bottom left>
-        <template v-slot:activator="{ on }">
-          <v-btn text class="text-none" v-on="on">
-            {{ currentGroup.id }}
-            <v-icon right>
-              mdi-menu-down
-            </v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item
-            v-for="group in groupList"
-            :key="group.id"
-            :to="'/group/' + group.id"
-          >
-            <v-list-item-title>
-              {{ group.id }}
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      -->
     </v-app-bar>
     <v-content>
       <nuxt />
@@ -64,7 +56,8 @@
 </template>
 
 <script lang="ts">
-import { reactive, defineComponent } from '@vue/composition-api'
+import { reactive, defineComponent, computed } from '@vue/composition-api'
+import { groupStore } from '@/store'
 
 interface NavigationMenu {
   icon: string
@@ -81,10 +74,12 @@ export default defineComponent({
     const navigationMenu = [
       { icon: 'mdi-home', text: 'Home', to: '/' }
     ] as NavigationMenu[]
+    const groupList = computed(() => groupStore.list)
 
     return {
       state,
-      navigationMenu
+      navigationMenu,
+      groupList
     }
   }
 })
