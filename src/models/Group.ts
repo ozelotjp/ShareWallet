@@ -16,12 +16,14 @@ export interface IGroupHistoryDocumentData {
   author: string
   createdAt: firebase.firestore.Timestamp
   title: string
-  users: {
-    [uid: string]: {
+  users: [
+    {
+      uid: string
       change: number
       wallet: number
     }
-  }
+  ]
+}
 
 export interface IGroupHistoryFunction {
   group: string
