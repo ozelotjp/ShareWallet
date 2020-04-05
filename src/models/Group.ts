@@ -31,7 +31,7 @@ export interface IGroupHistoryFunction {
   users: [
     {
       uid: string
-      change: string
+      change: number
     }
   ]
 }
