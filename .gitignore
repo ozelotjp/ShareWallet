@@ -88,3 +88,8 @@ sw.*
 
 # Vim swap files
 *.swp
+
+# firebase-functions
+functions/lib
+functions/node_modules
+functions/typings
