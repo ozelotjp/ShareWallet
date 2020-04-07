@@ -2,6 +2,7 @@ import { Plugin } from '@nuxt/types'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
+import 'firebase/functions'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAnPxhPM3zVG2OKj_vXCfmYt3fVRJPEVRY',
