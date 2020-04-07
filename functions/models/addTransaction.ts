@@ -1,4 +1,4 @@
-export interface IGroupHistoryFunction {
+export interface IAddTransaction {
   group: string
   title: string
   users: [
