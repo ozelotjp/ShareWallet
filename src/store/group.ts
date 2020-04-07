@@ -1,5 +1,5 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
-import { IGroupDocumentData } from '~/models/Group'
+import { IGroupDocumentData } from '@@/models/GroupDocument'
 
 @Module({ name: 'group', namespaced: true, stateFactory: true })
 export default class Group extends VuexModule {

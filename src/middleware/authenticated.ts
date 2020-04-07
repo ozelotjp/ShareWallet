@@ -1,6 +1,6 @@
 import { Middleware } from '@nuxt/types'
-import { groupStore, authenticatedStore } from '~/store'
-import { IGroupDocumentData } from '~/models/Group'
+import { IGroupDocumentData } from '@@/models/GroupDocument'
+import { groupStore, authenticatedStore } from '@/store'
 
 const myMiddleware: Middleware = ({ redirect, route, app: { $firebase } }) => {
   if ($firebase.auth().currentUser === null) {
