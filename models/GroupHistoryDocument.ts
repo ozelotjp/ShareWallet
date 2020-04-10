@@ -1,3 +1,5 @@
+import firebase from 'firebase'
+
 export interface IGroupHistoryDocumentData {
   id: string
   author: string

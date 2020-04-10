@@ -1,3 +1,5 @@
+import firebase from 'firebase'
+
 export interface IGroupDocumentData {
   id: string
   title: string
