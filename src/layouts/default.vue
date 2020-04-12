@@ -72,7 +72,7 @@ export default defineComponent({
     })
 
     const navigationMenu = [
-      { icon: 'mdi-home', text: 'Home', to: '/' }
+      { icon: 'mdi-home', text: 'ホーム', to: '/' }
     ] as NavigationMenu[]
     const groupList = computed(() => groupStore.list)
 
