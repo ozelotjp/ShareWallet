@@ -74,27 +74,32 @@ export const addTransaction = functions
           )
 
           // add history document
-          groupDocument.ref.collection('histories').add({
-            author: myUid,
-            createdAt: now,
-            title: data.title,
-            users: (() => {
-              const users = {} as {
-                [uid: string]: {
-                  diff: number
-                  wallet: number
+          groupDocument.ref
+            .collection('histories')
+            .add({
+              author: myUid,
+              createdAt: now,
+              title: data.title,
+              users: (() => {
+                const users = {} as {
+                  [uid: string]: {
+                    diff: number
+                    wallet: number
+                  }
                 }
-              }
-              Object.keys(data.users).forEach((uid) => {
-                users[uid] = {
-                  diff: data.users[uid].diff,
-                  wallet:
-                    groupDocumentData.users[uid].wallet + data.users[uid].diff
-                }
-              })
-              return users
-            })()
-          })
+                Object.keys(data.users).forEach((uid) => {
+                  users[uid] = {
+                    diff: data.users[uid].diff,
+                    wallet:
+                      groupDocumentData.users[uid].wallet + data.users[uid].diff
+                  }
+                })
+                return users
+              })()
+            })
+            .catch((error) => {
+              throw new Error(error)
+            })
         })
     })
   })
