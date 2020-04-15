@@ -203,7 +203,7 @@ export default defineComponent({
   middleware: 'authenticated',
   setup(_, { root: { $firebase, $route } }) {
     // general
-    const hitoryId = $route.params.id
+    const groupId = $route.params.id
     const myUid = $firebase.auth().currentUser!.uid
     const ready = reactive({
       wallet: false
@@ -217,7 +217,7 @@ export default defineComponent({
       $firebase
         .firestore()
         .collection('group')
-        .doc(hitoryId)
+        .doc(groupId)
         .get()
         .then((document) => {
           const groupDocument = Object.assign(document.data(), {
@@ -231,7 +231,7 @@ export default defineComponent({
       $firebase
         .firestore()
         .collection('group')
-        .doc(hitoryId)
+        .doc(groupId)
         .collection('histories')
         .orderBy('createdAt', 'desc')
         .get()
