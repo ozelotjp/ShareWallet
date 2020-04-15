@@ -18,6 +18,7 @@ export const addTransaction = functions
       typeof data.title !== 'string' ||
       data.title === '' ||
       typeof data.users !== 'object' ||
+      Object.keys(data.users).length === 0 ||
       Object.keys(data.users).reduce(
         (total, uid) => total + data.users[uid].diff,
         0
