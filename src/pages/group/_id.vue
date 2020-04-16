@@ -17,7 +17,7 @@
                   残高：{{ group.users[myUid].wallet }}円
                 </v-toolbar-title>
                 <v-spacer />
-                <v-btn @click="showAddTransactionDialog()">
+                <v-btn @click="showAddTransactionDialog">
                   取引を追加
                 </v-btn>
               </v-toolbar>
@@ -113,94 +113,28 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog
-      v-if="addTransactionDialogModal"
-      v-model="addTransactionDialogModal"
-      max-width="512"
-    >
-      <v-card>
-        <v-card-title>
-          取引を追加
-          <v-spacer />
-          <v-btn disabled>
-            テンプレート
-          </v-btn>
-        </v-card-title>
-        <v-card-text>
-          <v-text-field
-            v-model="addTransactionDialog.title"
-            label="取引内容"
-            prepend-inner-icon="mdi-text"
-            outlined
-            placeholder="昼飯代など"
-          />
-          <v-simple-table>
-            <thead>
-              <tr>
-                <th>
-                  名前
-                </th>
-                <th>
-                  金額
-                </th>
-                <th>
-                  <!-- Action -->
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="user in addTransactionDialog.users" :key="user.uid">
-                <td>
-                  {{ group.users[user.uid].name }}
-                </td>
-                <td>
-                  <v-text-field
-                    v-model="user.diff"
-                    append-icon="mdi-currency-jpy"
-                    style="max-width: 150px;"
-                    reverse
-                  >
-                    0
-                  </v-text-field>
-                </td>
-                <td>
-                  <v-btn @click="adjustDifference(user.uid)">
-                    差額調整
-                  </v-btn>
-                </td>
-              </tr>
-            </tbody>
-          </v-simple-table>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn @click="addTransactionDialogModal = false">
-            キャンセル
-          </v-btn>
-          <v-btn
-            :loading="addTransactionDialogLoading"
-            @click="addTransaction()"
-          >
-            取引を追加
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <add-transaction-dialog
+      ref="addTransactionDialog"
+      @submit="updateGroupState"
+    />
   </v-container>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, ref, computed } from '@vue/composition-api'
-import { IAddTransaction } from '@@/models/AddTransaction'
 import { IGroupDocumentData } from '@@/models/GroupDocument'
 import { IGroupHistoryDocumentData } from '@@/models/GroupHistoryDocument'
 import {
   convertTimestampToDateFormat,
   convertTimestampToDateTimeFormat
 } from '@/utils/format-data'
+import AddTransactionDialog from '@/components/AddTransactionDialog.vue'
 
 export default defineComponent({
   middleware: 'authenticated',
+  components: {
+    AddTransactionDialog
+  },
   setup(_, { root: { $firebase, $route } }) {
     // general
     const groupId = $route.params.id
@@ -313,93 +247,23 @@ export default defineComponent({
       historyDialogModal.value = true
     }
 
-    // add transaction dialog
-    const addTransactionDialog = reactive({
-      title: '',
-      users: [] as {
-        uid: string
-        diff: string
-      }[]
-    })
-    const addTransactionDialogModal = ref(false)
-    const addTransactionDialogLoading = ref(false)
+    // AddTransactionDialog
+    const addTransactionDialog = ref() as any
     const showAddTransactionDialog = () => {
-      addTransactionDialog.title = ''
-      addTransactionDialog.users = []
-      Object.keys(group.users).forEach((key) => {
-        addTransactionDialog.users.push({
-          uid: key,
-          diff: ''
-        })
-      })
-      addTransactionDialogModal.value = true
-    }
-    const adjustDifference = (uid: string) => {
-      const user = addTransactionDialog.users.filter(
-        (user) => user.uid === uid
-      )[0]
-      user.diff = addTransactionDialog.users
-        .filter((user) => user.uid !== uid)
-        .reduce((total, user) => total - Number(user.diff), 0)
-        .toString()
-    }
-    const addTransaction = () => {
-      const users = {} as {
-        [uid: string]: {
-          diff: number
-        }
-      }
-      addTransactionDialog.users.forEach((user) => {
-        if (Number(user.diff) === 0) {
-          return
-        }
-        users[user.uid] = {
-          diff: Number(user.diff)
-        }
-      })
-      // check non-numeric & zero (consistency)
-      if (
-        Object.keys(users).reduce(
-          (total, uid) => total + users[uid].diff,
-          0
-        ) !== 0
-      ) {
-        window.alert('金額の差が0になるように修正してください。')
-        return
-      }
-      // continue
-      addTransactionDialogLoading.value = true
-      $firebase
-        .app()
-        .functions('asia-northeast1')
-        .httpsCallable('addTransaction')({
-          group: group.id,
-          title: addTransactionDialog.title,
-          users
-        } as IAddTransaction)
-        .then((response) => console.log(response))
-        .catch((error) => console.error(error))
-        .finally(() => {
-          updateGroupState()
-          addTransactionDialogLoading.value = false
-          addTransactionDialogModal.value = false
-        })
+      addTransactionDialog.value.open(groupId, group.users)
     }
 
     return {
       myUid,
       ready,
       group,
+      updateGroupState,
       historiesTable,
       historyDialog,
       historyDialogModal,
       showHistoryDialog,
       addTransactionDialog,
-      addTransactionDialogModal,
-      addTransactionDialogLoading,
-      showAddTransactionDialog,
-      adjustDifference,
-      addTransaction
+      showAddTransactionDialog
     }
   }
 })
