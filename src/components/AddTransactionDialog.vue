@@ -31,7 +31,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(user, uid) in input.users" :key="uid">
+            <tr v-for="user in input.users" :key="user.uid">
               <td>
                 {{ user.name }}
               </td>
@@ -46,7 +46,7 @@
                 </v-text-field>
               </td>
               <td>
-                <v-btn @click="adjustDifference(uid)">
+                <v-btn @click="adjustDifference(user.uid)">
                   差額調整
                 </v-btn>
               </td>
@@ -72,18 +72,13 @@ import { defineComponent, ref, reactive } from '@vue/composition-api'
 import { IAddTransaction } from '../../models/AddTransaction'
 
 export default defineComponent({
-  setup(_, { root: { $firebase, $set }, emit }) {
+  setup(_, { root: { $firebase }, emit }) {
     const show = ref(false)
     const loading = ref(false)
     const input = reactive({
       group: '',
       title: '',
-      users: {} as {
-        [uid: string]: {
-          name: string
-          diff: string
-        }
-      }
+      users: [] as { uid: string; name: string; diff: string }[]
     })
 
     const open = (
@@ -94,13 +89,23 @@ export default defineComponent({
       loading.value = false
       input.group = group
       input.title = ''
-      input.users = {}
+      input.users = []
       // initialize users
       Object.keys(users).forEach((uid) => {
-        $set(input.users, uid, {
+        input.users.push({
+          uid,
           name: users[uid].name,
           diff: '0'
         })
+      })
+      input.users.sort((a, b) => {
+        if (a.name < b.name) {
+          return -1
+        }
+        if (a.name > b.name) {
+          return 1
+        }
+        return 0
       })
       // show
       show.value = true
@@ -114,25 +119,19 @@ export default defineComponent({
     }
 
     const adjustDifference = (uid: string) => {
-      input.users[uid].diff = Object.keys(input.users)
-        .filter((_uid) => _uid !== uid)
-        .reduce((total, _uid) => total - Number(input.users[_uid].diff), 0)
+      const diff = input.users
+        .filter((user) => user.uid !== uid)
+        .reduce((total, user) => total - Number(user.diff), 0)
         .toString()
+      input.users.filter((user) => user.uid === uid)[0].diff = diff
     }
     const addTransaction = () => {
-      const users = {} as {
-        [uid: string]: {
-          diff: number
-        }
-      }
-      Object.keys(input.users).forEach((uid) => {
-        const diff = Number(input.users[uid].diff)
-        if (diff === 0) {
+      const users = {} as { [uid: string]: { diff: number } }
+      input.users.forEach((user) => {
+        if (Number(user.diff) === 0) {
           return
         }
-        users[uid] = {
-          diff
-        }
+        users[user.uid] = { diff: Number(user.diff) }
       })
       // check title
       if (input.title === '') {

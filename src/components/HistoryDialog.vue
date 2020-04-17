@@ -109,6 +109,15 @@ export default defineComponent({
           wallet: history.users[uid].wallet
         })
       })
+      input.users.sort((a, b) => {
+        if (a.name < b.name) {
+          return -1
+        }
+        if (a.name > b.name) {
+          return 1
+        }
+        return 0
+      })
       show.value = true
     }
 
