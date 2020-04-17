@@ -40,79 +40,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-dialog
-      v-if="historyDialogModal"
-      v-model="historyDialogModal"
-      max-width="512"
-    >
-      <v-card>
-        <v-card-title>
-          詳細
-        </v-card-title>
-        <v-card-text>
-          <v-text-field
-            label="日時"
-            :value="historyDialog.createdAt"
-            prepend-inner-icon="mdi-calendar"
-            outlined
-            readonly
-          />
-          <v-text-field
-            label="取引内容"
-            :value="historyDialog.title"
-            prepend-inner-icon="mdi-text"
-            outlined
-            readonly
-          />
-          <v-text-field
-            label="作成者"
-            :value="group.users[historyDialog.author].name"
-            prepend-inner-icon="mdi-account"
-            outlined
-            readonly
-          />
-          <v-simple-table>
-            <thead>
-              <tr>
-                <th>
-                  名前
-                </th>
-                <th>
-                  金額
-                </th>
-                <th>
-                  差引残高
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="user in historyDialog.users" :key="user.uid">
-                <td>
-                  {{ group.users[user.uid].name }}
-                </td>
-                <td>
-                  <v-chip :color="user.diff >= 0 ? 'green' : 'red'" dark>
-                    {{ user.diff >= 0 ? '+' : '' }}{{ user.diff }}
-                  </v-chip>
-                </td>
-                <td>
-                  {{ user.wallet }}
-                </td>
-              </tr>
-            </tbody>
-          </v-simple-table>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn disabled>
-            取り消し
-          </v-btn>
-          <v-btn @click="historyDialogModal = false">
-            閉じる
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <history-dialog ref="historyDialog" />
     <add-transaction-dialog
       ref="addTransactionDialog"
       @submit="updateGroupState"
@@ -124,15 +52,14 @@
 import { defineComponent, reactive, ref, computed } from '@vue/composition-api'
 import { IGroupDocumentData } from '@@/models/GroupDocument'
 import { IGroupHistoryDocumentData } from '@@/models/GroupHistoryDocument'
-import {
-  convertTimestampToDateFormat,
-  convertTimestampToDateTimeFormat
-} from '@/utils/format-data'
+import { convertTimestampToDateFormat } from '@/utils/format-data'
+import HistoryDialog from '@/components/HistoryDialog.vue'
 import AddTransactionDialog from '@/components/AddTransactionDialog.vue'
 
 export default defineComponent({
   middleware: 'authenticated',
   components: {
+    HistoryDialog,
     AddTransactionDialog
   },
   setup(_, { root: { $firebase, $route } }) {
@@ -216,35 +143,12 @@ export default defineComponent({
     })
 
     // history dialog
-    const historyDialog = reactive({
-      id: '',
-      author: '',
-      createdAt: '',
-      title: '',
-      users: [] as {
-        uid: string
-        diff: number
-        wallet: number
-      }[]
-    })
-    const historyDialogModal = ref(false)
-    const showHistoryDialog = (id: string) => {
-      const history = histories.value.filter((history) => history.id === id)[0]
-      historyDialog.id = history.id
-      historyDialog.author = history.author
-      historyDialog.createdAt = convertTimestampToDateTimeFormat(
-        history.createdAt
-      )
-      historyDialog.title = history.title
-      historyDialog.users = []
-      Object.keys(history.users).forEach((uid) => {
-        historyDialog.users.push({
-          uid,
-          diff: history.users[uid].diff,
-          wallet: history.users[uid].wallet
-        })
-      })
-      historyDialogModal.value = true
+    const historyDialog = ref() as any
+    const showHistoryDialog = (historyId: string) => {
+      const history = histories.value.filter(
+        (history) => history.id === historyId
+      )[0]
+      historyDialog.value.open(group, history)
     }
 
     // AddTransactionDialog
@@ -260,7 +164,6 @@ export default defineComponent({
       updateGroupState,
       historiesTable,
       historyDialog,
-      historyDialogModal,
       showHistoryDialog,
       addTransactionDialog,
       showAddTransactionDialog
