@@ -12,7 +12,7 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider />
-      <v-list dense nav>
+      <v-list nav>
         <v-list-item
           v-for="(item, index) in navigationMenu"
           :key="index"
@@ -28,6 +28,12 @@
             {{ item.text }}
           </v-list-item-content>
         </v-list-item>
+        <v-divider />
+      </v-list>
+      <v-list nav subheader>
+        <v-subheader>
+          グループ一覧
+        </v-subheader>
         <v-list-item
           v-for="group in groupList"
           :key="group.id"
