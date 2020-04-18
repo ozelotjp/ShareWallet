@@ -73,8 +73,8 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from '@vue/composition-api'
 import { convertTimestampToDateTimeFormat } from '../utils/format-data'
-import { IGroupDocumentData } from '../../models/GroupDocument'
 import { IGroupHistoryDocumentData } from '../../models/GroupHistoryDocument'
+import { groupStore } from '../store'
 
 export default defineComponent({
   setup() {
@@ -92,10 +92,8 @@ export default defineComponent({
       }[]
     })
 
-    const open = (
-      group: IGroupDocumentData,
-      history: IGroupHistoryDocumentData
-    ) => {
+    const open = (groupId: string, history: IGroupHistoryDocumentData) => {
+      const group = groupStore.group(groupId)
       input.id = history.id
       input.author = group.users[history.author].name
       input.createdAt = convertTimestampToDateTimeFormat(history.createdAt)

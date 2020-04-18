@@ -32,30 +32,60 @@
         </v-btn>
       </template>
     </v-data-table>
+    <history-dialog ref="historyDialog" />
+    <add-transaction-dialog
+      ref="addTransactionDialog"
+      @submit="reloadHistoriesState"
+    />
   </v-card>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, ref } from '@vue/composition-api'
-import { IGroupDocumentData } from '../../models/GroupDocument'
 import { IGroupHistoryDocumentData } from '../../models/GroupHistoryDocument'
 import { convertTimestampToDateFormat } from '../utils/format-data'
+import { groupStore } from '@/store'
+import HistoryDialog from '@/components/HistoryDialog.vue'
+import AddTransactionDialog from '@/components/AddTransactionDialog.vue'
 
 export default defineComponent({
-  setup(_, { root: { $firebase }, emit }) {
+  components: {
+    HistoryDialog,
+    AddTransactionDialog
+  },
+  props: {
+    groupId: {
+      type: String,
+      required: true
+    }
+  },
+  setup(props, { root: { $firebase } }) {
     const show = ref(false)
-
-    const group = ref({} as IGroupDocumentData)
+    const group = groupStore.group(props.groupId)
     const histories = ref([] as IGroupHistoryDocumentData[])
 
-    const open = (
-      _group: IGroupDocumentData,
-      _histories: IGroupHistoryDocumentData[]
-    ) => {
-      group.value = _group
-      histories.value = _histories
-      show.value = true
+    const reloadHistoriesState = () => {
+      show.value = false
+      $firebase
+        .firestore()
+        .collection('group')
+        .doc(group.id)
+        .collection('histories')
+        .orderBy('createdAt', 'desc')
+        .get()
+        .then((documentsQuery) => {
+          histories.value = []
+          documentsQuery.docs.forEach((document) => {
+            histories.value.push(
+              Object.assign(document.data(), {
+                id: document.id
+              }) as IGroupHistoryDocumentData
+            )
+          })
+          show.value = true
+        })
     }
+    reloadHistoriesState()
 
     interface IHistoriesTableItems {
       id: string
@@ -66,7 +96,7 @@ export default defineComponent({
     }
     const table = computed(() => {
       const myUid = $firebase.auth().currentUser!.uid
-      const wallet = group.value.users[myUid].wallet
+      const wallet = group.users[myUid].wallet
       const headers = [
         { text: '日付', value: 'createdAt' },
         { text: '取引内容', value: 'title' },
@@ -91,19 +121,30 @@ export default defineComponent({
       }
     })
 
+    const historyDialog = ref() as any
     const showHistoryDialog = (historyId: string) => {
-      emit('clickHistoryDialogBtn', historyId)
+      const history = histories.value.filter(
+        (history) => history.id === historyId
+      )[0]
+      historyDialog.value.open(group.id, history)
     }
+
+    const addTransactionDialog = ref() as any
     const showAddTransactionDialog = () => {
-      emit('clickAddTransactionDialogBtn')
+      addTransactionDialog.value.open(group.id, group.users)
     }
 
     return {
+      // general
       show,
-      open,
       table,
-      showHistoryDialog,
-      showAddTransactionDialog
+      reloadHistoriesState,
+      // historyDialog
+      historyDialog,
+      showAddTransactionDialog,
+      // addTransactionDialog
+      addTransactionDialog,
+      showHistoryDialog
     }
   }
 })
