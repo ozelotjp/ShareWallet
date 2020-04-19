@@ -42,8 +42,8 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from '@vue/composition-api'
-import { IGroupHistoryDocumentData } from '../../models/GroupHistoryDocument'
-import { convertTimestampToDateFormat } from '../utils/format-data'
+import { IGroupHistoryDocumentData } from '@@/models/GroupHistoryDocument'
+import { convertTimestampToDateFormat } from '@/utils/format-data'
 import { groupStore } from '@/store'
 import HistoryDialog from '@/components/HistoryDialog.vue'
 import AddTransactionDialog from '@/components/AddTransactionDialog.vue'

@@ -69,7 +69,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive } from '@vue/composition-api'
-import { IAddTransaction } from '../../models/AddTransaction'
+import { IAddTransaction } from '@@/models/AddTransaction'
 
 export default defineComponent({
   setup(_, { root: { $firebase }, emit }) {

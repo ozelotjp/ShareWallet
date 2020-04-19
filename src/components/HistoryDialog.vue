@@ -72,9 +72,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from '@vue/composition-api'
-import { convertTimestampToDateTimeFormat } from '../utils/format-data'
-import { IGroupHistoryDocumentData } from '../../models/GroupHistoryDocument'
-import { groupStore } from '../store'
+import { IGroupHistoryDocumentData } from '@@/models/GroupHistoryDocument'
+import { convertTimestampToDateTimeFormat } from '@/utils/format-data'
+import { groupStore } from '@/store'
 
 export default defineComponent({
   setup() {
