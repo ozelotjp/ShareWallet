@@ -61,7 +61,7 @@ export default defineComponent({
   },
   setup(props, { root: { $firebase } }) {
     const show = ref(false)
-    const group = groupStore.getGroup(props.groupId)
+    const group = groupStore.group[props.groupId]
     const histories = ref([] as IGroupHistoryDocumentData[])
 
     const reloadHistoriesState = () => {

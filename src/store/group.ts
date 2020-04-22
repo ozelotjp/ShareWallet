@@ -1,15 +1,16 @@
+import Vue from 'vue'
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { IGroupDocumentData } from '@@/models/GroupDocument'
 
 @Module({ name: 'group', namespaced: true, stateFactory: true })
 export default class Group extends VuexModule {
   ready = false
-  list = [] as IGroupDocumentData[]
+  group = {} as { [id: string]: IGroupDocumentData }
 
-  get getGroup() {
-    return (id: string) => {
-      return this.list.filter((group) => group.id === id)[0] || undefined
-    }
+  get list() {
+    // return () => {
+    return Object.keys(this.group).map((id) => this.group[id])
+    // }
   }
 
   @Mutation
@@ -19,7 +20,12 @@ export default class Group extends VuexModule {
 
   @Mutation
   UPDATE_GROUP(document: IGroupDocumentData) {
-    this.list.push(document)
+    Vue.set(this.group, document.id, document)
+  }
+
+  @Mutation
+  REMOVE_GROUP(document: IGroupDocumentData) {
+    Vue.delete(this.group, document.id)
   }
 
   @Action
@@ -30,9 +36,14 @@ export default class Group extends VuexModule {
   @Action
   updateGroup(snapshot: firebase.firestore.QueryDocumentSnapshot) {
     this.UPDATE_GROUP(
-      Object.assign(snapshot.data(), {
-        id: snapshot.id
-      }) as IGroupDocumentData
+      Object.assign(snapshot.data(), { id: snapshot.id }) as IGroupDocumentData
+    )
+  }
+
+  @Action
+  removeGroup(snapshot: firebase.firestore.QueryDocumentSnapshot) {
+    this.REMOVE_GROUP(
+      Object.assign(snapshot.data(), { id: snapshot.id }) as IGroupDocumentData
     )
   }
 }

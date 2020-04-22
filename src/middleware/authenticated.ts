@@ -25,7 +25,15 @@ const myMiddleware: Middleware = async ({
 
     querySnapshot.query.onSnapshot((document) => {
       document.docChanges().forEach((change) => {
-        groupStore.updateGroup(change.doc)
+        switch (change.type) {
+          case 'added':
+          case 'modified':
+            groupStore.updateGroup(change.doc)
+            break
+          case 'removed':
+            groupStore.removeGroup(change.doc)
+            break
+        }
       })
       groupStore.updateReady(true) // 重複して実行されるのは許容
     })

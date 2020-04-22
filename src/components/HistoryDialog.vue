@@ -93,7 +93,7 @@ export default defineComponent({
     })
 
     const open = (groupId: string, history: IGroupHistoryDocumentData) => {
-      const group = groupStore.getGroup(groupId)
+      const group = groupStore.group[groupId]
       input.id = history.id
       input.author = group.users[history.author].name
       input.createdAt = convertTimestampToDateTimeFormat(history.createdAt)
