@@ -1,5 +1,4 @@
 import { Middleware } from '@nuxt/types'
-import { IGroupDocumentData } from '@@/models/GroupDocument'
 import { groupStore, authenticatedStore } from '@/store'
 
 const myMiddleware: Middleware = async ({
@@ -13,7 +12,7 @@ const myMiddleware: Middleware = async ({
     return
   }
   if (groupStore.ready === false) {
-    const documentsQuery = await $firebase
+    const querySnapshot = await $firebase
       .firestore()
       .collection('group')
       .where(`users.${$firebase.auth().currentUser?.uid}.role`, 'in', [
@@ -23,15 +22,13 @@ const myMiddleware: Middleware = async ({
         'read'
       ])
       .get()
-    const group = [] as IGroupDocumentData[]
-    documentsQuery.docs.forEach((document) => {
-      group.push(
-        Object.assign(document.data(), {
-          id: document.id
-        }) as IGroupDocumentData
-      )
+
+    querySnapshot.query.onSnapshot((document) => {
+      document.docChanges().forEach((change) => {
+        groupStore.updateGroup(change.doc)
+      })
+      groupStore.updateReady(true) // 重複して実行されるのは許容
     })
-    groupStore.initializeGroup(group)
   }
 }
 

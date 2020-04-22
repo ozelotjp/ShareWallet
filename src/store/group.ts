@@ -6,22 +6,33 @@ export default class Group extends VuexModule {
   ready = false
   list = [] as IGroupDocumentData[]
 
-  get group() {
+  get getGroup() {
     return (id: string) => {
-      return this.list.filter((group) => group.id === id)[0]
+      return this.list.filter((group) => group.id === id)[0] || undefined
     }
   }
 
   @Mutation
-  INITIALIZE_GROUP(list: IGroupDocumentData[]) {
-    list.forEach((group) => {
-      this.list.push(group)
-    })
-    this.ready = true
+  UPDATE_READY(ready: boolean) {
+    this.ready = ready
+  }
+
+  @Mutation
+  UPDATE_GROUP(document: IGroupDocumentData) {
+    this.list.push(document)
   }
 
   @Action
-  initializeGroup(list: IGroupDocumentData[]) {
-    this.INITIALIZE_GROUP(list)
+  updateReady(ready: boolean) {
+    this.UPDATE_READY(ready)
+  }
+
+  @Action
+  updateGroup(snapshot: firebase.firestore.QueryDocumentSnapshot) {
+    this.UPDATE_GROUP(
+      Object.assign(snapshot.data(), {
+        id: snapshot.id
+      }) as IGroupDocumentData
+    )
   }
 }
