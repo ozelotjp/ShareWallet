@@ -8,9 +8,7 @@ export default class Group extends VuexModule {
   group = {} as { [id: string]: IGroupDocumentData }
 
   get list() {
-    // return () => {
     return Object.keys(this.group).map((id) => this.group[id])
-    // }
   }
 
   @Mutation
