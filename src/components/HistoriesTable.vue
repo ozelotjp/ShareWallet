@@ -1,8 +1,6 @@
 <template>
   <v-card max-width="1024">
-    <v-skeleton-loader v-if="show === false" type="table" />
     <v-data-table
-      v-else
       :headers="table.headers"
       :items="table.items"
       disable-sort
@@ -10,7 +8,7 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title> 残高：{{ table.wallet }}円 </v-toolbar-title>
+          <v-toolbar-title>残高：{{ wallet }}円</v-toolbar-title>
           <v-spacer />
           <v-btn @click="showAddTransactionDialog">
             取引を追加
@@ -33,15 +31,17 @@
       </template>
     </v-data-table>
     <history-dialog ref="historyDialog" />
-    <add-transaction-dialog
-      ref="addTransactionDialog"
-      @submit="reloadHistoriesState"
-    />
+    <add-transaction-dialog ref="addTransactionDialog" />
   </v-card>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import {
+  defineComponent,
+  computed,
+  ref,
+  onBeforeUnmount
+} from '@vue/composition-api'
 import { IGroupHistoryDocumentData } from '@@/models/GroupHistoryDocument'
 import { convertTimestampToDateFormat } from '@/utils/format-data'
 import { groupStore } from '@/store'
@@ -60,32 +60,33 @@ export default defineComponent({
     }
   },
   setup(props, { root: { $firebase } }) {
-    const show = ref(false)
-    const group = groupStore.group[props.groupId]
-    const histories = ref([] as IGroupHistoryDocumentData[])
+    const unsubscribe = [] as Function[]
+    onBeforeUnmount(() => {
+      unsubscribe.forEach((item) => item())
+    })
 
-    const reloadHistoriesState = () => {
-      show.value = false
+    const myUid = $firebase.auth().currentUser!.uid
+    const group = computed(() => groupStore.group[props.groupId]).value
+    const histories = ref([] as IGroupHistoryDocumentData[])
+    unsubscribe.push(
       $firebase
         .firestore()
         .collection('group')
         .doc(group.id)
         .collection('histories')
         .orderBy('createdAt', 'desc')
-        .get()
-        .then((documentsQuery) => {
-          histories.value = []
-          documentsQuery.docs.forEach((document) => {
-            histories.value.push(
-              Object.assign(document.data(), {
-                id: document.id
-              }) as IGroupHistoryDocumentData
-            )
+        .onSnapshot((snapshot) => {
+          histories.value = snapshot.docs.map((history) => {
+            return {
+              ...history.data(),
+              id: history.id
+            } as IGroupHistoryDocumentData
           })
-          show.value = true
         })
-    }
-    reloadHistoriesState()
+    )
+    const wallet = computed(
+      () => groupStore.group[props.groupId].users[myUid].wallet
+    )
 
     interface IHistoriesTableItems {
       id: string
@@ -95,8 +96,6 @@ export default defineComponent({
       wallet: number | undefined
     }
     const table = computed(() => {
-      const myUid = $firebase.auth().currentUser!.uid
-      const wallet = group.users[myUid].wallet
       const headers = [
         { text: '日付', value: 'createdAt' },
         { text: '取引内容', value: 'title' },
@@ -115,7 +114,6 @@ export default defineComponent({
         })
       })
       return {
-        wallet,
         headers,
         items
       }
@@ -135,14 +133,10 @@ export default defineComponent({
     }
 
     return {
-      // general
-      show,
+      wallet,
       table,
-      reloadHistoriesState,
-      // historyDialog
       historyDialog,
       showAddTransactionDialog,
-      // addTransactionDialog
       addTransactionDialog,
       showHistoryDialog
     }
