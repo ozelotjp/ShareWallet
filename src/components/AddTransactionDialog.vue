@@ -151,7 +151,7 @@ export default defineComponent({
           title: input.title,
           users
         } as IAddTransaction)
-        .then((_) => {
+        .then(() => {
           show.value = false
         })
         .catch((error: any) => {
