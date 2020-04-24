@@ -38,9 +38,10 @@ export const addTransaction = functions
       if (groupDocument.exists === false) {
         throw new Error('not found')
       }
-      const groupDocumentData = Object.assign(groupDocument.data(), {
+      const groupDocumentData = {
+        ...groupDocument.data(),
         id: groupDocument.id
-      }) as IGroupDocumentData
+      } as IGroupDocumentData
 
       // check: access denied
       if (

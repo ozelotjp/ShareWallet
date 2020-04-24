@@ -33,15 +33,17 @@ export default class Group extends VuexModule {
 
   @Action
   updateGroup(snapshot: firebase.firestore.QueryDocumentSnapshot) {
-    this.UPDATE_GROUP(
-      Object.assign(snapshot.data(), { id: snapshot.id }) as IGroupDocumentData
-    )
+    this.UPDATE_GROUP({
+      ...snapshot.data(),
+      id: snapshot.id
+    } as IGroupDocumentData)
   }
 
   @Action
   removeGroup(snapshot: firebase.firestore.QueryDocumentSnapshot) {
-    this.REMOVE_GROUP(
-      Object.assign(snapshot.data(), { id: snapshot.id }) as IGroupDocumentData
-    )
+    this.REMOVE_GROUP({
+      ...snapshot.data(),
+      id: snapshot.id
+    } as IGroupDocumentData)
   }
 }
