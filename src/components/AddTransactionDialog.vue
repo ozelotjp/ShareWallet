@@ -56,7 +56,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn @click="cancel">
+        <v-btn @click="show = false">
           キャンセル
         </v-btn>
         <v-btn :loading="loading" @click="addTransaction">
@@ -72,7 +72,7 @@ import { defineComponent, ref, reactive } from '@vue/composition-api'
 import { IAddTransaction } from '@@/models/AddTransaction'
 
 export default defineComponent({
-  setup(_, { root: { $firebase }, emit }) {
+  setup(_, { root: { $firebase } }) {
     const show = ref(false)
     const loading = ref(false)
     const input = reactive({
@@ -109,13 +109,6 @@ export default defineComponent({
       })
       // show
       show.value = true
-    }
-    const cancel = () => {
-      show.value = false
-    }
-    const submit = () => {
-      emit('submit')
-      show.value = false
     }
 
     const adjustDifference = (uid: string) => {
@@ -159,7 +152,7 @@ export default defineComponent({
           users
         } as IAddTransaction)
         .then((_) => {
-          submit()
+          show.value = false
         })
         .catch((error: any) => {
           console.error(error)
@@ -174,7 +167,6 @@ export default defineComponent({
       loading,
       input,
       open,
-      cancel,
       adjustDifference,
       addTransaction
     }
