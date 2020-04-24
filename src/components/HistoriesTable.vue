@@ -4,7 +4,16 @@
       :headers="table.headers"
       :items="table.items"
       disable-sort
-      hide-default-footer
+      :footer-props="{
+        showFirstLastPage: true,
+        firstIcon: 'mdi-arrow-collapse-left',
+        prevIcon: 'mdi-arrow-left',
+        nextIcon: 'mdi-arrow-right',
+        lastIcon: 'mdi-arrow-collapse-right'
+      }"
+      :loading="false"
+      loading-text="読込中"
+      no-data-text="取引データがありません（または読み込み中）"
     >
       <template v-slot:top>
         <v-toolbar flat>
