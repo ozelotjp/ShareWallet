@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="1024">
+  <v-card>
     <v-data-table
       :headers="table.headers"
       :items="table.items"
