@@ -49,7 +49,8 @@ import {
   defineComponent,
   computed,
   ref,
-  onBeforeUnmount
+  onBeforeUnmount,
+  Ref
 } from '@vue/composition-api'
 import { IGroupHistoryDocumentData } from '@@/models/GroupHistoryDocument'
 import { convertTimestampToDateFormat } from '@/utils/format-data'
@@ -128,7 +129,7 @@ export default defineComponent({
       }
     })
 
-    const historyDialog = ref() as any
+    const historyDialog = ref() as Ref<any>
     const showHistoryDialog = (historyId: string) => {
       const history = histories.value.filter(
         (history) => history.id === historyId
@@ -136,7 +137,7 @@ export default defineComponent({
       historyDialog.value.open(group.id, history)
     }
 
-    const addTransactionDialog = ref() as any
+    const addTransactionDialog = ref() as Ref<any>
     const showAddTransactionDialog = () => {
       addTransactionDialog.value.open(group.id, group.users)
     }
