@@ -158,8 +158,7 @@ export default defineComponent({
           title: input.title,
           users
         } as IAddTransaction)
-        .then((response) => {
-          console.log(response)
+        .then((_) => {
           submit()
         })
         .catch((error: any) => {
