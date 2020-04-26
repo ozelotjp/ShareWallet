@@ -1,4 +1,5 @@
 import firebase from 'firebase'
+import { IRoleKey } from './Role'
 
 export interface IGroupDocumentData {
   id: string
@@ -7,7 +8,7 @@ export interface IGroupDocumentData {
   users: {
     [uid: string]: {
       name: string
-      role: 'owner' | 'moderator' | 'write' | 'read'
+      role: IRoleKey
       wallet: number
     }
   }

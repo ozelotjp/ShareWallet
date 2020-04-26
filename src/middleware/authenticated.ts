@@ -1,4 +1,5 @@
 import { Middleware } from '@nuxt/types'
+import { IRoleKey } from '@@/models/Role'
 import { groupStore, authenticatedStore } from '@/store'
 
 const myMiddleware: Middleware = async ({
@@ -16,11 +17,10 @@ const myMiddleware: Middleware = async ({
       .firestore()
       .collection('group')
       .where(`users.${$firebase.auth().currentUser?.uid}.role`, 'in', [
-        'owner',
-        'moderator',
+        'admin',
         'write',
         'read'
-      ])
+      ] as IRoleKey[])
       .get()
 
     querySnapshot.query.onSnapshot((document) => {
