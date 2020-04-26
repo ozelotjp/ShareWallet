@@ -22,7 +22,7 @@ module.exports = functions
       throw new Error('bad request')
     }
 
-    admin
+    return admin
       .firestore()
       .collection('group')
       .doc(data.group)
@@ -37,7 +37,7 @@ module.exports = functions
           ...inviteSnapshot.data(),
           id: inviteSnapshot.id
         } as IGroupInviteDocumentData
-        admin
+        return admin
           .firestore()
           .collection('group')
           .doc(data.group)
