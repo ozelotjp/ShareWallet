@@ -1,8 +1,11 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col cols="12">
-        <histories-table v-if="ready" :group-id="groupId" />
+    <v-row v-if="ready">
+      <v-col xl="6" cols="12">
+        <histories-table :group-id="groupId" />
+      </v-col>
+      <v-col xl="6" cols="12">
+        <users-table :group-id="groupId" />
       </v-col>
     </v-row>
   </v-container>
@@ -11,12 +14,14 @@
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api'
 import HistoriesTable from '@/components/HistoriesTable.vue'
+import UsersTable from '@/components/UsersTable.vue'
 import { groupStore } from '@/store'
 
 export default defineComponent({
   middleware: 'authenticated',
   components: {
-    HistoriesTable
+    HistoriesTable,
+    UsersTable
   },
   setup(_, { root: { $route } }) {
     const ready = computed(() => groupStore.ready)
