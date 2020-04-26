@@ -1,5 +1,6 @@
 const functions = {
   addTransaction: './addTransaction',
+  joinGroup: './joinGroup'
 } as { [functionName: string]: string }
 
 for (const name in functions) {
