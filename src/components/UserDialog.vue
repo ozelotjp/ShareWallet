@@ -13,7 +13,7 @@
         />
         <v-select
           v-model="user.role"
-          :items="['管理者', '読み書き', '閲覧のみ']"
+          :items="['管理者', '読み書き', '閲覧のみ', '無効']"
           label="権限"
           prepend-inner-icon="mdi-account"
           outlined

@@ -3,7 +3,8 @@ import { IRoleKey, IRoleName } from '@@/models/Role'
 const roleList = [
   { key: 'admin', name: '管理者' },
   { key: 'write', name: '読み書き' },
-  { key: 'read', name: '閲覧のみ' }
+  { key: 'read', name: '閲覧のみ' },
+  { key: 'invalid', name: '無効' }
 ] as { key: IRoleKey; name: IRoleName }[]
 
 export const convertRoleNameFromKey = (roleKey: IRoleKey): IRoleName => {
