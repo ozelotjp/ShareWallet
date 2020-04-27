@@ -69,18 +69,15 @@ export default defineComponent({
   setup(props: IProps) {
     const users = computed(() => {
       const group = groupStore.group[props.groupId]
+      const role = ['admin', 'write', 'read', 'invalid']
       return Object.keys(group.users)
         .map((id) => {
           return { ...group.users[id], id }
         })
         .sort((a, b) => {
-          if (a.name < b.name) {
-            return -1
-          }
-          if (a.name > b.name) {
-            return 1
-          }
-          return 0
+          const x = role.indexOf(a.role) - role.indexOf(b.role)
+          const y = a.name < b.name ? -1 : a.name > b.name ? 1 : 0
+          return x !== 0 ? x : y
         }) as User[]
     })
 
