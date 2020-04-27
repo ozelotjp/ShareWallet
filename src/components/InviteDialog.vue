@@ -92,7 +92,7 @@ export default defineComponent({
           console.debug(invites.value)
         })
         .catch((error) => {
-          console.error(error)
+          console.error({ error })
         })
         .finally(() => {
           loading.value = false
@@ -117,7 +117,7 @@ export default defineComponent({
           window.alert('リンクを削除しました')
         })
         .catch((error) => {
-          console.error(error)
+          console.error({ error })
         })
     }
 

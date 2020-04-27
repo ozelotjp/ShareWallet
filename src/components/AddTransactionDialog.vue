@@ -155,7 +155,7 @@ export default defineComponent({
           show.value = false
         })
         .catch((error: any) => {
-          console.error(error)
+          console.error({ error })
         })
         .finally(() => {
           loading.value = false
