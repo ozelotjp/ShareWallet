@@ -7,8 +7,6 @@ import { IRoleKey } from '../../models/Role'
 module.exports = functions
   .region('asia-northeast1')
   .https.onCall((data: IAddTransaction, context) => {
-    admin.initializeApp(functions.config().firebase)
-
     // check: bad request
     if (
       typeof context.auth !== 'object' ||

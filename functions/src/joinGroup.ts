@@ -6,8 +6,6 @@ import { IGroupInviteDocumentData } from '../../models/GroupInviteDocument'
 module.exports = functions
   .region('asia-northeast1')
   .https.onCall((data: IJoinGroup, { auth }) => {
-    admin.initializeApp(functions.config().firebase)
-
     // check: bad request
     if (
       typeof auth !== 'object' ||

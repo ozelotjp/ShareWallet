@@ -1,10 +1,15 @@
-const functions = {
+import * as functions from 'firebase-functions'
+import * as admin from 'firebase-admin'
+
+admin.initializeApp(functions.config().firebase)
+
+const func = {
   addTransaction: './addTransaction',
   joinGroup: './joinGroup'
 } as { [functionName: string]: string }
 
-for (const name in functions) {
+for (const name in func) {
   if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === name) {
-    exports[name] = require(functions[name])
+    exports[name] = require(func[name])
   }
 }
