@@ -5,6 +5,7 @@ admin.initializeApp(functions.config().firebase)
 
 const func = {
   addTransaction: './addTransaction',
+  revertTransaction: './revertTransaction',
   joinGroup: './joinGroup'
 } as { [functionName: string]: string }
 
