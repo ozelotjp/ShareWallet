@@ -59,7 +59,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn disabled>
+        <v-btn :loading="loading" @click="revertTransaction">
           取り消し
         </v-btn>
         <v-btn @click="show = false">
@@ -77,9 +77,11 @@ import { convertTimestampToDateTimeFormat } from '@/utils/format-data'
 import { groupStore } from '@/store'
 
 export default defineComponent({
-  setup() {
+  setup(_, { root: { $firebase } }) {
     const show = ref(false)
+    const loading = ref(false)
     const input = reactive({
+      group: '',
       id: '',
       author: '',
       createdAt: '',
@@ -94,6 +96,7 @@ export default defineComponent({
 
     const open = (groupId: string, history: IGroupHistoryDocumentData) => {
       const group = groupStore.group[groupId]
+      input.group = groupId
       input.id = history.id
       input.author = group.users[history.author].name
       input.createdAt = convertTimestampToDateTimeFormat(history.createdAt)
@@ -117,12 +120,41 @@ export default defineComponent({
         return 0
       })
       show.value = true
+      loading.value = false
+    }
+
+    const revertTransaction = () => {
+      if (
+        window.confirm(
+          'この取引を取り消してもよろしいですか？\nこの操作はもとに戻せません。'
+        ) === true
+      ) {
+        loading.value = true
+        $firebase
+          .app()
+          .functions('asia-northeast1')
+          .httpsCallable('revertTransaction')({
+            group: input.group,
+            history: input.id
+          })
+          .then(() => {
+            show.value = false
+          })
+          .catch((error) => {
+            console.error({ error })
+          })
+          .finally(() => {
+            loading.value = false
+          })
+      }
     }
 
     return {
       show,
+      loading,
       input,
-      open
+      open,
+      revertTransaction
     }
   }
 })
