@@ -70,6 +70,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive } from '@vue/composition-api'
 import { IAddTransaction } from '@@/models/AddTransaction'
+import { groupStore } from '../store'
 
 export default defineComponent({
   setup(_, { root: { $firebase } }) {
@@ -92,6 +93,9 @@ export default defineComponent({
       input.users = []
       // initialize users
       Object.keys(users).forEach((uid) => {
+        if (groupStore.group[group].users[uid].role === 'invalid') {
+          return
+        }
         input.users.push({
           uid,
           name: users[uid].name,
