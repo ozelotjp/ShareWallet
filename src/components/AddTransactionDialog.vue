@@ -82,11 +82,14 @@ export default defineComponent({
       users: [] as { uid: string; name: string; diff: string }[]
     })
 
-    const open = (group: string) => {
+    const open = (
+      group: string,
+      initialize?: { title: string; users: { [uid: string]: { diff: number } } }
+    ) => {
       // reset
       loading.value = false
       input.group = group
-      input.title = ''
+      input.title = initialize?.title || ''
       input.users = []
       // initialize users
       const users = groupStore.group[group].users
@@ -97,7 +100,7 @@ export default defineComponent({
         input.users.push({
           uid,
           name: users[uid].name,
-          diff: '0'
+          diff: initialize?.users[uid].diff.toString() || '0'
         })
       })
       input.users.sort((a, b) => {

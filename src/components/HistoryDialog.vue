@@ -58,25 +58,33 @@
         </v-simple-table>
       </v-card-text>
       <v-card-actions>
-        <v-spacer />
+        <v-btn @click="duplicateTransaction">
+          複製
+        </v-btn>
         <v-btn :loading="loading" @click="revertTransaction">
           取り消し
         </v-btn>
+        <v-spacer />
         <v-btn @click="show = false">
           閉じる
         </v-btn>
       </v-card-actions>
     </v-card>
+    <add-transaction-dialog ref="addTransactionDialog" />
   </v-dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from '@vue/composition-api'
+import { defineComponent, reactive, ref, Ref } from '@vue/composition-api'
 import { IGroupHistoryDocumentData } from '@@/models/GroupHistoryDocument'
 import { convertTimestampToDateTimeFormat } from '@/utils/format-data'
 import { groupStore } from '@/store'
+import AddTransactionDialog from '@/components/AddTransactionDialog.vue'
 
 export default defineComponent({
+  components: {
+    AddTransactionDialog
+  },
   setup(_, { root: { $firebase } }) {
     const show = ref(false)
     const loading = ref(false)
@@ -123,6 +131,20 @@ export default defineComponent({
       loading.value = false
     }
 
+    const addTransactionDialog = ref({}) as Ref<any>
+    const duplicateTransaction = () => {
+      const users = {} as { [uid: string]: { diff: number } }
+      input.users.forEach((user) => {
+        users[user.uid] = {
+          diff: user.diff
+        }
+      })
+      addTransactionDialog.value.open(input.group, {
+        title: input.title,
+        users
+      })
+    }
+
     const revertTransaction = () => {
       if (
         window.confirm(
@@ -154,6 +176,8 @@ export default defineComponent({
       loading,
       input,
       open,
+      addTransactionDialog,
+      duplicateTransaction,
       revertTransaction
     }
   }
