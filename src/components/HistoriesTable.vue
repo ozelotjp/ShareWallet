@@ -139,7 +139,7 @@ export default defineComponent({
 
     const addTransactionDialog = ref() as Ref<any>
     const showAddTransactionDialog = () => {
-      addTransactionDialog.value.open(group.id, group.users)
+      addTransactionDialog.value.open(group.id)
     }
 
     return {

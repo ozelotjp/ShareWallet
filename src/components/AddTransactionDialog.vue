@@ -82,16 +82,14 @@ export default defineComponent({
       users: [] as { uid: string; name: string; diff: string }[]
     })
 
-    const open = (
-      group: string,
-      users: { [uid: string]: { name: string } }
-    ) => {
+    const open = (group: string) => {
       // reset
       loading.value = false
       input.group = group
       input.title = ''
       input.users = []
       // initialize users
+      const users = groupStore.group[group].users
       Object.keys(users).forEach((uid) => {
         if (groupStore.group[group].users[uid].role === 'invalid') {
           return
