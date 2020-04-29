@@ -3,10 +3,6 @@
     <v-card>
       <v-card-title>
         取引を追加
-        <v-spacer />
-        <v-btn disabled>
-          テンプレート
-        </v-btn>
       </v-card-title>
       <v-card-text>
         <v-text-field
