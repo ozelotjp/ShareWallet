@@ -89,7 +89,6 @@ export default defineComponent({
               id: doc.id
             } as IGroupInviteDocumentData
           })
-          console.debug(invites.value)
         })
         .catch((error) => {
           console.error({ error })
