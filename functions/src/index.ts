@@ -6,7 +6,8 @@ admin.initializeApp(functions.config().firebase)
 const func = {
   addTransaction: './addTransaction',
   revertTransaction: './revertTransaction',
-  joinGroup: './joinGroup'
+  joinGroup: './joinGroup',
+  updateUser: './updateUser'
 } as { [functionName: string]: string }
 
 for (const name in func) {
