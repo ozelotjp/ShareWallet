@@ -35,6 +35,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from '@vue/composition-api'
 import { IRoleName, IRoleKey } from '@@/models/Role'
+import { IUpdateUser } from '@@/models/UpdateUser'
 import { convertRoleNameFromKey, convertRoleKeyFromName } from '@/utils/role'
 
 export default defineComponent({
@@ -68,25 +69,24 @@ export default defineComponent({
     const update = () => {
       loading.value = true
       $firebase
-        .firestore()
-        .collection('group')
-        .doc(groupId.value)
-        .set(
-          {
-            users: {
-              [user.id]: {
-                name: user.name,
-                role: convertRoleKeyFromName(user.role)
-              }
-            }
-          },
-          { merge: true }
-        )
+        .app()
+        .functions('asia-northeast1')
+        .httpsCallable('updateUser')({
+          group: groupId.value,
+          user: {
+            id: user.id,
+            name: user.name,
+            role: convertRoleKeyFromName(user.role)
+          }
+        } as IUpdateUser)
         .then(() => {
           show.value = false
         })
         .catch((error) => {
           console.error({ error })
+        })
+        .finally(() => {
+          loading.value = false
         })
     }
 
