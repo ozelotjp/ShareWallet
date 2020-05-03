@@ -88,9 +88,10 @@ module.exports = functions
         latestHistoryId = latestHistorySnapshot.id
       })
       const isLatestHistory = historyData.id === latestHistoryId
+      const isWithinAnHour = historyData.createdAt.seconds >= now.seconds - 3600
 
       // add or delete history
-      if (isLatestHistory) {
+      if (isLatestHistory && isWithinAnHour) {
         return historyRef.delete().catch((error) => {
           throw new Error(error)
         })
