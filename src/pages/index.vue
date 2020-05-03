@@ -3,18 +3,15 @@
     <v-row>
       <v-col v-for="group in groupList" :key="group.id" cols="4">
         <v-card>
-          <v-list-item two-line>
-            <v-list-item-content>
-              <v-list-item-title class="headline mb-1">
+          <v-card-title>
                 {{ group.title }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
+          </v-card-title>
+          <v-card-subtitle>
                 残高： {{ group.users[uid].wallet }}円
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+          </v-card-subtitle>
           <v-card-actions>
-            <v-btn text :to="'/group/' + group.id">
+            <v-spacer />
+            <v-btn :to="'/group/' + group.id">
               詳細
             </v-btn>
           </v-card-actions>
