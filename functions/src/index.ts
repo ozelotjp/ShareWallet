@@ -4,6 +4,7 @@ import * as admin from 'firebase-admin'
 admin.initializeApp(functions.config().firebase)
 
 const func = {
+  createGroup: './createGroup',
   addTransaction: './addTransaction',
   revertTransaction: './revertTransaction',
   joinGroup: './joinGroup',
