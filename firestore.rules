@@ -20,7 +20,7 @@ service cloud.firestore {
     match /group/{groupId} {
       allow read: if isOneOfRoles(resource, ['admin', 'write', 'read'])
 
-      match /histories/{historyId} {
+      match /transactions/{transactionId} {
         allow read: if isOneOfRoles(getGroup(groupId), ['admin', 'write', 'read'])
       }
 

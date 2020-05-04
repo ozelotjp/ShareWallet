@@ -72,8 +72,8 @@ module.exports = functions
         { merge: true }
       )
 
-      // add history document
-      await groupDocument.ref.collection('histories').add({
+      // add transaction document
+      await groupDocument.ref.collection('transactions').add({
         author: myUid,
         createdAt: now,
         title: data.title,

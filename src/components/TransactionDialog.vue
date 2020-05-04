@@ -76,7 +76,8 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, Ref } from '@vue/composition-api'
-import { IGroupHistoryDocumentData } from '@@/models/GroupHistoryDocument'
+import { IGroupTransactionDocumentData } from '@@/models/GroupTransactionDocument'
+import { IRevertTransaction } from '../../models/RevertTransaction'
 import { convertTimestampToDateTimeFormat } from '@/utils/format-data'
 import { groupStore } from '@/store'
 import AddTransactionDialog from '@/components/AddTransactionDialog.vue'
@@ -102,20 +103,23 @@ export default defineComponent({
       }[]
     })
 
-    const open = (groupId: string, history: IGroupHistoryDocumentData) => {
+    const open = (
+      groupId: string,
+      transaction: IGroupTransactionDocumentData
+    ) => {
       const group = groupStore.group[groupId]
       input.group = groupId
-      input.id = history.id
-      input.author = group.users[history.author].name
-      input.createdAt = convertTimestampToDateTimeFormat(history.createdAt)
-      input.title = history.title
+      input.id = transaction.id
+      input.author = group.users[transaction.author].name
+      input.createdAt = convertTimestampToDateTimeFormat(transaction.createdAt)
+      input.title = transaction.title
       input.users = []
-      Object.keys(history.users).forEach((uid) => {
+      Object.keys(transaction.users).forEach((uid) => {
         input.users.push({
           uid,
           name: group.users[uid].name,
-          diff: history.users[uid].diff,
-          wallet: history.users[uid].wallet
+          diff: transaction.users[uid].diff,
+          wallet: transaction.users[uid].wallet
         })
       })
       input.users.sort((a, b) => {
@@ -157,8 +161,8 @@ export default defineComponent({
           .functions('asia-northeast1')
           .httpsCallable('revertTransaction')({
             group: input.group,
-            history: input.id
-          })
+            transaction: input.id
+          } as IRevertTransaction)
           .then(() => {
             show.value = false
           })

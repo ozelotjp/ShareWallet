@@ -1,6 +1,6 @@
 import firebase from 'firebase'
 
-export interface IGroupHistoryDocumentData {
+export interface IGroupTransactionDocumentData {
   id: string
   author: string
   createdAt: firebase.firestore.Timestamp

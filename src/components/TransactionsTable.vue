@@ -34,12 +34,12 @@
         </v-chip>
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-btn @click="showHistoryDialog(item.id)">
+        <v-btn @click="showTransactionDialog(item.id)">
           詳細
         </v-btn>
       </template>
     </v-data-table>
-    <history-dialog ref="historyDialog" />
+    <transaction-dialog ref="transactionDialog" />
     <add-transaction-dialog ref="addTransactionDialog" />
   </v-card>
 </template>
@@ -52,15 +52,15 @@ import {
   onBeforeUnmount,
   Ref
 } from '@vue/composition-api'
-import { IGroupHistoryDocumentData } from '@@/models/GroupHistoryDocument'
+import { IGroupTransactionDocumentData } from '@@/models/GroupTransactionDocument'
 import { convertTimestampToDateFormat } from '@/utils/format-data'
 import { groupStore } from '@/store'
-import HistoryDialog from '@/components/HistoryDialog.vue'
+import transactionDialog from '@/components/transactionDialog.vue'
 import AddTransactionDialog from '@/components/AddTransactionDialog.vue'
 
 export default defineComponent({
   components: {
-    HistoryDialog,
+    transactionDialog,
     AddTransactionDialog
   },
   props: {
@@ -78,20 +78,20 @@ export default defineComponent({
     const loading = ref(true)
     const myUid = $firebase.auth().currentUser!.uid
     const group = computed(() => groupStore.group[props.groupId]).value
-    const histories = ref([] as IGroupHistoryDocumentData[])
+    const transactions = ref([] as IGroupTransactionDocumentData[])
     unsubscribe.push(
       $firebase
         .firestore()
         .collection('group')
         .doc(group.id)
-        .collection('histories')
+        .collection('transactions')
         .orderBy('createdAt', 'desc')
         .onSnapshot((snapshot) => {
-          histories.value = snapshot.docs.map((history) => {
+          transactions.value = snapshot.docs.map((transaction) => {
             return {
-              ...history.data(),
-              id: history.id
-            } as IGroupHistoryDocumentData
+              ...transaction.data(),
+              id: transaction.id
+            } as IGroupTransactionDocumentData
           })
           loading.value = false
         })
@@ -100,7 +100,7 @@ export default defineComponent({
       () => groupStore.group[props.groupId].users[myUid].wallet
     )
 
-    interface IHistoriesTableItems {
+    interface ITransactionsTableItems {
       id: string
       createdAt: string
       title: string
@@ -115,14 +115,14 @@ export default defineComponent({
         { text: '差引残高', value: 'wallet' },
         { value: 'actions', width: '1%' }
       ]
-      const items = [] as IHistoriesTableItems[]
-      histories.value.forEach((history) => {
+      const items = [] as ITransactionsTableItems[]
+      transactions.value.forEach((transaction) => {
         items.push({
-          id: history.id,
-          createdAt: convertTimestampToDateFormat(history.createdAt),
-          title: history.title,
-          diff: history.users[myUid]?.diff,
-          wallet: history.users[myUid]?.wallet
+          id: transaction.id,
+          createdAt: convertTimestampToDateFormat(transaction.createdAt),
+          title: transaction.title,
+          diff: transaction.users[myUid]?.diff,
+          wallet: transaction.users[myUid]?.wallet
         })
       })
       return {
@@ -131,12 +131,14 @@ export default defineComponent({
       }
     })
 
-    const historyDialog = ref() as Ref<any>
-    const showHistoryDialog = (historyId: string) => {
-      const history = histories.value.filter(
-        (history) => history.id === historyId
-      )[0]
-      historyDialog.value.open(group.id, history)
+    const transactionDialog = ref() as Ref<any>
+    const showTransactionDialog = (transactionId: string) => {
+      transactionDialog.value.open(
+        group.id,
+        transactions.value.filter(
+          (transaction) => transaction.id === transactionId
+        )[0]
+      )
     }
 
     const addTransactionDialog = ref() as Ref<any>
@@ -148,10 +150,10 @@ export default defineComponent({
       loading,
       wallet,
       table,
-      historyDialog,
+      transactionDialog,
+      showTransactionDialog,
       showAddTransactionDialog,
-      addTransactionDialog,
-      showHistoryDialog
+      addTransactionDialog
     }
   }
 })

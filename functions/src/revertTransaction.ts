@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import { IRevertTransaction } from '../../models/RevertTransaction'
 import { IGroupDocumentData } from '../../models/GroupDocument'
-import { IGroupHistoryDocumentData } from '../../models/GroupHistoryDocument'
+import { IGroupTransactionDocumentData } from '../../models/GroupTransactionDocument'
 import { IRoleKey } from '../../models/Role'
 
 module.exports = functions
@@ -14,8 +14,8 @@ module.exports = functions
       typeof context.auth.uid !== 'string' ||
       typeof data.group !== 'string' ||
       data.group === '' ||
-      typeof data.history !== 'string' ||
-      data.history === ''
+      typeof data.transaction !== 'string' ||
+      data.transaction === ''
     ) {
       throw new Error('bad request')
     }
@@ -26,9 +26,11 @@ module.exports = functions
 
     return admin.firestore().runTransaction(async (transaction) => {
       const groupRef = admin.firestore().collection('group').doc(data.group)
-      const historyRef = groupRef.collection('histories').doc(data.history)
+      const transactionRef = groupRef
+        .collection('transactions')
+        .doc(data.transaction)
       const latestHisotiresRef = groupRef
-        .collection('histories')
+        .collection('transactions')
         .orderBy('createdAt', 'desc')
         .limit(1)
 
@@ -52,18 +54,18 @@ module.exports = functions
       }
 
       // get snapshot
-      const historySnapshot = await historyRef.get()
+      const transactionSnapshot = await transactionRef.get()
 
       // check exists
-      if (historySnapshot.exists === false) {
+      if (transactionSnapshot.exists === false) {
         throw new Error('not found')
       }
 
       // get data
-      const historyData = {
-        ...historySnapshot.data(),
-        id: historySnapshot.id
-      } as IGroupHistoryDocumentData
+      const transactionData = {
+        ...transactionSnapshot.data(),
+        id: transactionSnapshot.id
+      } as IGroupTransactionDocumentData
 
       // update group
       const groupDataMerge = {
@@ -73,45 +75,47 @@ module.exports = functions
         updatedAt: firebase.firestore.Timestamp
         users: { [uid: string]: { wallet: number } }
       }
-      Object.keys(historyData.users).forEach((userId) => {
+      Object.keys(transactionData.users).forEach((userId) => {
         groupDataMerge.users[userId] = {
           wallet:
-            groupData.users[userId].wallet - historyData.users[userId].wallet
+            groupData.users[userId].wallet -
+            transactionData.users[userId].wallet
         }
       })
       transaction.set(groupRef, groupDataMerge, { merge: true })
 
-      // check the latest history
-      const latestHistoriesSnapshot = await latestHisotiresRef.get()
-      let latestHistoryId = ''
-      latestHistoriesSnapshot.forEach((latestHistorySnapshot) => {
-        latestHistoryId = latestHistorySnapshot.id
+      // check the latest transaction
+      const latestTransactionsSnapshot = await latestHisotiresRef.get()
+      let latestTransactionId = ''
+      latestTransactionsSnapshot.forEach((latestTransactionSnapshot) => {
+        latestTransactionId = latestTransactionSnapshot.id
       })
-      const isLatestHistory = historyData.id === latestHistoryId
-      const isWithinAnHour = historyData.createdAt.seconds >= now.seconds - 3600
+      const isLatestTransaction = transactionData.id === latestTransactionId
+      const isWithinAnHour =
+        transactionData.createdAt.seconds >= now.seconds - 3600
 
-      // add or delete history
-      if (isLatestHistory && isWithinAnHour) {
-        return historyRef.delete().catch((error) => {
+      // add or delete transaction
+      if (isLatestTransaction && isWithinAnHour) {
+        return transactionRef.delete().catch((error) => {
           throw new Error(error)
         })
       } else {
         return groupRef
-          .collection('histories')
+          .collection('transactions')
           .add({
             author: uid,
             createdAt: now,
-            title: `【取消】${historyData.title}`,
+            title: `【取消】${transactionData.title}`,
             users: (() => {
               const users = {} as {
                 [uid: string]: { diff: number; wallet: number }
               }
-              Object.keys(historyData.users).forEach((userId) => {
+              Object.keys(transactionData.users).forEach((userId) => {
                 users[userId] = {
-                  diff: -historyData.users[userId].diff,
+                  diff: -transactionData.users[userId].diff,
                   wallet:
                     groupData.users[userId].wallet -
-                    historyData.users[userId].wallet
+                    transactionData.users[userId].wallet
                 }
               })
               return users
