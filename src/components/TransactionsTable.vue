@@ -55,7 +55,7 @@ import {
 import { IGroupTransactionDocumentData } from '@@/models/GroupTransactionDocument'
 import { convertTimestampToDateFormat } from '@/utils/format-data'
 import { groupStore } from '@/store'
-import transactionDialog from '@/components/transactionDialog.vue'
+import transactionDialog from '@/components/TransactionDialog.vue'
 import AddTransactionDialog from '@/components/AddTransactionDialog.vue'
 
 export default defineComponent({
