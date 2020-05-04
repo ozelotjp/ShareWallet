@@ -77,7 +77,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, Ref } from '@vue/composition-api'
 import { IGroupTransactionDocumentData } from '@@/models/GroupTransactionDocument'
-import { IRevertTransaction } from '../../models/RevertTransaction'
+import { IRevertTransaction } from '@@/models/RevertTransaction'
 import { convertTimestampToDateTimeFormat } from '@/utils/format-data'
 import { groupStore } from '@/store'
 import AddTransactionDialog from '@/components/AddTransactionDialog.vue'
