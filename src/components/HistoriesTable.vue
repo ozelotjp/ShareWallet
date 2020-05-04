@@ -11,9 +11,9 @@
         nextIcon: 'mdi-arrow-right',
         lastIcon: 'mdi-arrow-collapse-right'
       }"
-      :loading="false"
-      loading-text="読込中"
-      no-data-text="取引データがありません（または読み込み中）"
+      :loading="loading"
+      loading-text="取引データを読込中"
+      no-data-text="取引データがありません"
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -75,6 +75,7 @@ export default defineComponent({
       unsubscribe.forEach((item) => item())
     })
 
+    const loading = ref(true)
     const myUid = $firebase.auth().currentUser!.uid
     const group = computed(() => groupStore.group[props.groupId]).value
     const histories = ref([] as IGroupHistoryDocumentData[])
@@ -92,6 +93,7 @@ export default defineComponent({
               id: history.id
             } as IGroupHistoryDocumentData
           })
+          loading.value = false
         })
     )
     const wallet = computed(
@@ -143,6 +145,7 @@ export default defineComponent({
     }
 
     return {
+      loading,
       wallet,
       table,
       historyDialog,
