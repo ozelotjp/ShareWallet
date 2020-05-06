@@ -23,9 +23,16 @@ export default defineComponent({
     TransactionsTable,
     UsersTable
   },
-  setup(_, { root: { $route } }) {
+  setup(_, { root: { $nuxt, $route } }) {
     const ready = computed(() => groupStore.ready)
     const groupId = $route.params.id
+
+    if (ready.value === true) {
+      if (typeof groupStore.group[groupId] === 'undefined') {
+        $nuxt.error({ statusCode: 404 })
+        return
+      }
+    }
 
     return {
       ready,
