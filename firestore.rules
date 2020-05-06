@@ -25,7 +25,8 @@ service cloud.firestore {
       }
 
       match /invite/{inviteId} {
-        allow read, write: if isOneOfRoles(getGroup(groupId), ['admin'])
+        allow get: if true
+        allow list, write: if isOneOfRoles(getGroup(groupId), ['admin'])
       }
     }
   }
