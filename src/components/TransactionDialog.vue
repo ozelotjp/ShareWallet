@@ -58,10 +58,17 @@
         </v-simple-table>
       </v-card-text>
       <v-card-actions>
-        <v-btn @click="duplicateTransaction">
+        <v-btn
+          v-if="['admin', 'write'].includes(myRole)"
+          @click="duplicateTransaction"
+        >
           複製
         </v-btn>
-        <v-btn :loading="loading" @click="revertTransaction">
+        <v-btn
+          v-if="['admin', 'write'].includes(myRole)"
+          :loading="loading"
+          @click="revertTransaction"
+        >
           取り消し
         </v-btn>
         <v-spacer />
@@ -89,6 +96,7 @@ export default defineComponent({
   setup(_, { root: { $firebase } }) {
     const show = ref(false)
     const loading = ref(false)
+    const myRole = ref('')
     const input = reactive({
       group: '',
       id: '',
@@ -108,6 +116,7 @@ export default defineComponent({
       transaction: IGroupTransactionDocumentData
     ) => {
       const group = groupStore.group[groupId]
+      myRole.value = group.users[$firebase.auth().currentUser!.uid].role
       input.group = groupId
       input.id = transaction.id
       input.author = group.users[transaction.author].name
@@ -178,6 +187,7 @@ export default defineComponent({
     return {
       show,
       loading,
+      myRole,
       input,
       open,
       addTransactionDialog,

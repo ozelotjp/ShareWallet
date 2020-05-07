@@ -19,7 +19,10 @@
         <v-toolbar flat>
           <v-toolbar-title>残高：{{ wallet }}円</v-toolbar-title>
           <v-spacer />
-          <v-btn @click="showAddTransactionDialog">
+          <v-btn
+            v-if="['admin', 'write'].includes(myRole)"
+            @click="showAddTransactionDialog"
+          >
             取引を追加
           </v-btn>
         </v-toolbar>
@@ -78,6 +81,7 @@ export default defineComponent({
     const loading = ref(true)
     const myUid = $firebase.auth().currentUser!.uid
     const group = computed(() => groupStore.group[props.groupId]).value
+    const myRole = computed(() => group.users[myUid].role)
     const transactions = ref([] as IGroupTransactionDocumentData[])
     unsubscribe.push(
       $firebase
@@ -148,6 +152,7 @@ export default defineComponent({
 
     return {
       loading,
+      myRole,
       wallet,
       table,
       transactionDialog,

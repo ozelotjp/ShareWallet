@@ -3,7 +3,7 @@
     <v-card-title>
       ユーザ一覧
       <v-spacer />
-      <v-btn @click="showInviteDialog">
+      <v-btn v-if="['admin'].includes(myRole)" @click="showInviteDialog">
         招待
       </v-btn>
     </v-card-title>
@@ -14,7 +14,9 @@
             <th>名前</th>
             <th>残高</th>
             <th>権限</th>
-            <th style="width: 1%;"><!-- actions --></th>
+            <th v-if="['admin'].includes(myRole)" style="width: 1%;">
+              <!-- actions -->
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -22,7 +24,7 @@
             <td>{{ user.name }}</td>
             <td>{{ user.wallet }}</td>
             <td>{{ convertRoleNameFromKey(user.role) }}</td>
-            <td>
+            <td v-if="['admin'].includes(myRole)">
               <v-btn @click="showUserDialog(user)">
                 編集
               </v-btn>
@@ -66,7 +68,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props: IProps) {
+  setup(props: IProps, { root: { $firebase } }) {
     const users = computed(() => {
       const group = groupStore.group[props.groupId]
       const role = ['admin', 'write', 'read', 'invalid']
@@ -79,6 +81,11 @@ export default defineComponent({
           const y = a.name < b.name ? -1 : a.name > b.name ? 1 : 0
           return x !== 0 ? x : y
         }) as User[]
+    })
+    const myRole = computed(() => {
+      return users.value.filter(
+        (user) => user.id === $firebase.auth().currentUser!.uid
+      )[0].role
     })
 
     const userDialog = ref() as Ref<any>
@@ -93,6 +100,7 @@ export default defineComponent({
 
     return {
       users,
+      myRole,
       convertRoleNameFromKey,
       userDialog,
       showUserDialog,
