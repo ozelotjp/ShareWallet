@@ -35,6 +35,7 @@
 import { defineComponent, ref } from '@vue/composition-api'
 import { IGroupInviteDocumentData } from '@@/models/GroupInviteDocument'
 import { IJoinGroup } from '@@/models/JoinGroup'
+import { groupStore } from '@/store'
 
 export default defineComponent({
   middleware: 'authenticated',
@@ -78,7 +79,8 @@ export default defineComponent({
           name: input.value
         } as IJoinGroup)
         .then(() => {
-          $router.push(`/group/${$route.params.group}`)
+          groupStore.updateReady(false)
+          $router.push('/')
         })
         .catch((error) => {
           console.error({ error })

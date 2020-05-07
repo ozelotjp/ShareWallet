@@ -21,9 +21,10 @@
 <script lang="ts">
 import { defineComponent, ref, reactive } from '@vue/composition-api'
 import { ICreateGroup } from '@@/models/CreateGroup'
+import { groupStore } from '@/store'
 
 export default defineComponent({
-  setup(_, { root: { $firebase, $router } }) {
+  setup(_, { root: { $firebase } }) {
     const show = ref(false)
     const loading = ref(false)
     const group = reactive({
@@ -47,9 +48,9 @@ export default defineComponent({
           name: group.name,
           username: group.username
         } as ICreateGroup)
-        .then(({ data: { groupId } }) => {
+        .then(() => {
+          groupStore.updateReady(false)
           show.value = false
-          $router.push(`/group/${groupId}`)
         })
         .catch((error) => {
           console.error({ error })
