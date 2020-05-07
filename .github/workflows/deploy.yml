@@ -1,0 +1,39 @@
+name: production deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '10.x'
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: |
+          yarn install --frozen-lockfile
+          yarn install --frozen-lockfile --cwd functions
+
+      - name: Generate
+        run: yarn run generate
+
+      - name: Deploy
+          run: yarn run firebase deploy --token "$FIREBASE_TOKEN"
+          env:
+            FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
