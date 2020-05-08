@@ -84,7 +84,7 @@
         </v-col>
       </v-card-actions>
     </v-card>
-    <add-transaction-dialog ref="addTransactionDialog" />
+    <add-transaction-dialog ref="addTransactionDialog" @added="show = false" />
   </v-dialog>
 </template>
 

@@ -78,7 +78,7 @@ import { compareAlphabet } from '@/utils/compareAlphabet'
 import { groupStore } from '@/store'
 
 export default defineComponent({
-  setup(_, { root: { $firebase } }) {
+  setup(_, { root: { $firebase }, emit }) {
     const show = ref(false)
     const loading = ref(false)
     const input = reactive({
@@ -155,6 +155,7 @@ export default defineComponent({
         } as IAddTransaction)
         .then(() => {
           show.value = false
+          emit('added')
         })
         .catch((error: any) => {
           console.error({ error })
