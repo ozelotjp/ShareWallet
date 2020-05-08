@@ -85,6 +85,7 @@
 import { defineComponent, reactive, ref, Ref } from '@vue/composition-api'
 import { IGroupTransactionDocumentData } from '@@/models/GroupTransactionDocument'
 import { IRevertTransaction } from '@@/models/RevertTransaction'
+import { compareAlphabet } from '@/utils/compareAlphabet'
 import { convertTimestampToDateTimeFormat } from '@/utils/format-data'
 import { groupStore } from '@/store'
 import AddTransactionDialog from '@/components/AddTransactionDialog.vue'
@@ -131,9 +132,7 @@ export default defineComponent({
           wallet: transaction.users[uid].wallet
         })
       })
-      input.users.sort((a, b) =>
-        a.name > b.name ? 1 : a.name < b.name ? -1 : 0
-      )
+      input.users.sort((a, b) => compareAlphabet(a.name, b.name))
       show.value = true
       loading.value = false
     }

@@ -41,6 +41,7 @@
 <script lang="ts">
 import { defineComponent, computed, ref, Ref } from '@vue/composition-api'
 import { IRoleKey } from '@@/models/Role'
+import { compareAlphabet } from '@/utils/compareAlphabet'
 import { groupStore } from '@/store'
 import { convertRoleNameFromKey } from '@/utils/role'
 import UserDialog from '@/components/UserDialog.vue'
@@ -78,7 +79,7 @@ export default defineComponent({
         })
         .sort((a, b) => {
           const x = role.indexOf(a.role) - role.indexOf(b.role)
-          const y = a.name < b.name ? -1 : a.name > b.name ? 1 : 0
+          const y = compareAlphabet(a.name, b.name)
           return x !== 0 ? x : y
         }) as User[]
     })

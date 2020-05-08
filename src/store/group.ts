@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { IGroupDocumentData } from '@@/models/GroupDocument'
+import { compareAlphabet } from '@/utils/compareAlphabet'
 
 @Module({ name: 'group', namespaced: true, stateFactory: true })
 export default class Group extends VuexModule {
@@ -10,7 +11,7 @@ export default class Group extends VuexModule {
   get list() {
     return Object.keys(this.group)
       .map((id) => this.group[id])
-      .sort((a, b) => (a.title > b.title ? 1 : a.title < b.title ? -1 : 0))
+      .sort((a, b) => compareAlphabet(a.title, b.title))
   }
 
   @Mutation

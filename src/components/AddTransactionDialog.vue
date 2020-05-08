@@ -66,6 +66,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive } from '@vue/composition-api'
 import { IAddTransaction } from '@@/models/AddTransaction'
+import { compareAlphabet } from '@/utils/compareAlphabet'
 import { groupStore } from '@/store'
 
 export default defineComponent({
@@ -99,9 +100,7 @@ export default defineComponent({
           diff: initialize?.users[uid].diff.toString() || '0'
         })
       })
-      input.users.sort((a, b) =>
-        a.name > b.name ? 1 : a.name < b.name ? -1 : 0
-      )
+      input.users.sort((a, b) => compareAlphabet(a.name, b.name))
       // show
       show.value = true
     }
