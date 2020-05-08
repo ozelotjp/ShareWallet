@@ -23,10 +23,11 @@
         />
       </v-card-text>
       <v-card-actions>
-        <v-spacer />
-        <v-btn color="primary" @click="show = false">
-          閉じる
-        </v-btn>
+        <v-col>
+          <v-btn color="primary" block @click="show = false">
+            閉じる
+          </v-btn>
+        </v-col>
       </v-card-actions>
     </v-card>
   </v-dialog>

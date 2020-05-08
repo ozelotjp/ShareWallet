@@ -15,13 +15,16 @@
         <v-checkbox v-model="permanent" label="一回使われたら削除する" />
       </v-card-text>
       <v-card-actions>
-        <v-spacer />
-        <v-btn @click="show = false">
-          取り消し
-        </v-btn>
-        <v-btn :loading="loading" color="primary" @click="createInvite">
-          作成
-        </v-btn>
+        <v-col cols="6">
+          <v-btn block @click="show = false">
+            キャンセル
+          </v-btn>
+        </v-col>
+        <v-col cols="6">
+          <v-btn :loading="loading" color="primary" block @click="createInvite">
+            作成
+          </v-btn>
+        </v-col>
       </v-card-actions>
     </v-card>
   </v-dialog>

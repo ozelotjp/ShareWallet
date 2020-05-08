@@ -9,10 +9,11 @@
         <v-text-field v-model="group.username" label="あなたの名前" />
       </v-card-text>
       <v-card-actions>
-        <v-spacer />
-        <v-btn :loading="loading" color="primary" @click="createGroup">
-          作成
-        </v-btn>
+        <v-col>
+          <v-btn :loading="loading" color="primary" block @click="createGroup">
+            作成
+          </v-btn>
+        </v-col>
       </v-card-actions>
     </v-card>
   </v-dialog>

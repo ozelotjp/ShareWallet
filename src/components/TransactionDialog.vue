@@ -58,23 +58,30 @@
         </v-simple-table>
       </v-card-text>
       <v-card-actions>
-        <v-btn
-          v-if="['admin', 'write'].includes(myRole)"
-          @click="duplicateTransaction"
-        >
-          複製
-        </v-btn>
-        <v-btn
-          v-if="['admin', 'write'].includes(myRole)"
-          :loading="loading"
-          @click="revertTransaction"
-        >
-          取り消し
-        </v-btn>
-        <v-spacer />
-        <v-btn color="primary" @click="show = false">
-          閉じる
-        </v-btn>
+        <v-col cols="3">
+          <v-btn
+            v-if="['admin', 'write'].includes(myRole)"
+            block
+            @click="duplicateTransaction"
+          >
+            複製
+          </v-btn>
+        </v-col>
+        <v-col cols="3">
+          <v-btn
+            v-if="['admin', 'write'].includes(myRole)"
+            :loading="loading"
+            block
+            @click="revertTransaction"
+          >
+            取り消し
+          </v-btn>
+        </v-col>
+        <v-col cols="6">
+          <v-btn color="primary" block @click="show = false">
+            閉じる
+          </v-btn>
+        </v-col>
       </v-card-actions>
     </v-card>
     <add-transaction-dialog ref="addTransactionDialog" />

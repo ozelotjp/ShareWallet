@@ -20,13 +20,16 @@
         />
       </v-card-text>
       <v-card-actions>
-        <v-spacer />
-        <v-btn @click="show = false">
-          取り消し
-        </v-btn>
-        <v-btn :loading="loading" color="primary" @click="update">
-          更新
-        </v-btn>
+        <v-col cols="6">
+          <v-btn block @click="show = false">
+            キャンセル
+          </v-btn>
+        </v-col>
+        <v-col cols="6">
+          <v-btn :loading="loading" color="primary" block @click="update">
+            更新
+          </v-btn>
+        </v-col>
       </v-card-actions>
     </v-card>
   </v-dialog>
