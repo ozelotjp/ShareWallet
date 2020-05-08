@@ -27,8 +27,8 @@
             <tr v-for="invite in invites" :key="invite.id">
               <td>{{ convertRoleNameFromKey(invite.role) }}</td>
               <td class="text-center">
-                <v-chip :color="invite.permanent ? 'red' : 'green'" dark>
-                  {{ invite.permanent ? 'いいえ' : 'はい' }}
+                <v-chip :color="invite.permanent ? 'yellow' : 'gray'">
+                  {{ invite.permanent ? '何度でも可' : '一度きり' }}
                 </v-chip>
               </td>
               <td class="text-right">

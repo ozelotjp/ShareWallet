@@ -12,7 +12,7 @@
           prepend-inner-icon="mdi-account"
           outlined
         />
-        <v-checkbox v-model="permanent" label="一回使われたら削除する" />
+        <v-checkbox v-model="permanent" label="何度でも使えるようにする" />
       </v-card-text>
       <v-card-actions>
         <v-col cols="6">
@@ -49,7 +49,7 @@ export default defineComponent({
       loading.value = false
       groupId.value = _groupId
       role.value = '閲覧のみ'
-      permanent.value = true
+      permanent.value = false
     }
 
     const createInvite = () => {
