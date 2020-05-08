@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row v-if="ready && ready2">
+    <v-row v-if="ready">
       <v-col xl="6" cols="12">
         <transactions-table :group-id="groupId" />
       </v-col>
@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from '@vue/composition-api'
+import { defineComponent, computed } from '@vue/composition-api'
 import TransactionsTable from '@/components/TransactionsTable.vue'
 import UsersTable from '@/components/UsersTable.vue'
 import { groupStore } from '@/store'
@@ -24,24 +24,23 @@ export default defineComponent({
     UsersTable
   },
   setup(_, { root: { $nuxt, $route } }) {
-    const ready = computed(() => groupStore.ready)
-    const ready2 = ref(false)
-    const groupId = $route.params.id
-
-    if (ready.value === true) {
+    const ready = computed(() => {
+      if (groupStore.ready === false) {
+        return false
+      }
       if (typeof groupStore.group[groupId] === 'undefined') {
         $nuxt.error({
           statusCode: 404,
           message: 'グループがありませんでした'
         })
-        return
+        return false
       }
-      ready2.value = true
-    }
+      return true
+    })
+    const groupId = $route.params.id
 
     return {
       ready,
-      ready2,
       groupId
     }
   }
