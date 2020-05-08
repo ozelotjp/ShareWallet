@@ -99,15 +99,9 @@ export default defineComponent({
           diff: initialize?.users[uid].diff.toString() || '0'
         })
       })
-      input.users.sort((a, b) => {
-        if (a.name < b.name) {
-          return -1
-        }
-        if (a.name > b.name) {
-          return 1
-        }
-        return 0
-      })
+      input.users.sort((a, b) =>
+        a.name > b.name ? 1 : a.name < b.name ? -1 : 0
+      )
       // show
       show.value = true
     }
