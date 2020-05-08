@@ -10,7 +10,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn :loading="loading" @click="createGroup">
+        <v-btn :loading="loading" color="primary" @click="createGroup">
           作成
         </v-btn>
       </v-card-actions>

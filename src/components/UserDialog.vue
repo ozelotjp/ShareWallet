@@ -24,7 +24,7 @@
         <v-btn @click="show = false">
           取り消し
         </v-btn>
-        <v-btn :loading="loading" @click="update">
+        <v-btn :loading="loading" color="primary" @click="update">
           更新
         </v-btn>
       </v-card-actions>

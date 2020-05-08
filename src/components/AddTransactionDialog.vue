@@ -55,7 +55,7 @@
         <v-btn @click="show = false">
           キャンセル
         </v-btn>
-        <v-btn :loading="loading" @click="addTransaction">
+        <v-btn :loading="loading" color="primary" @click="addTransaction">
           取引を追加
         </v-btn>
       </v-card-actions>

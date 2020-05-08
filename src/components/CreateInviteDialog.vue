@@ -19,7 +19,7 @@
         <v-btn @click="show = false">
           取り消し
         </v-btn>
-        <v-btn :loading="loading" @click="createInvite">
+        <v-btn :loading="loading" color="primary" @click="createInvite">
           作成
         </v-btn>
       </v-card-actions>

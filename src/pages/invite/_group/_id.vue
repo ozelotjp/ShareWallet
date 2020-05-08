@@ -21,7 +21,7 @@
               prepend-inner-icon="mdi-account"
               outlined
             />
-            <v-btn :loading="loading" @click="joinGroup">
+            <v-btn :loading="loading" color="primary" @click="joinGroup">
               参加
             </v-btn>
           </v-card-text>

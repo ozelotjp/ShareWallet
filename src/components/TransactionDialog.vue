@@ -72,7 +72,7 @@
           取り消し
         </v-btn>
         <v-spacer />
-        <v-btn @click="show = false">
+        <v-btn color="primary" @click="show = false">
           閉じる
         </v-btn>
       </v-card-actions>
