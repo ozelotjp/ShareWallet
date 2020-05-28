@@ -1,60 +1,51 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="state.drawer" app>
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title>
-            ShareWallet
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            ver1.0.0
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-      <v-divider />
-      <v-list nav>
-        <v-list-item
-          v-for="(item, index) in navigationMenu"
-          :key="index"
-          :to="item.to"
-          link
-        >
-          <v-list-item-icon>
-            <v-icon>
-              {{ item.icon }}
-            </v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            {{ item.text }}
-          </v-list-item-content>
-        </v-list-item>
-        <v-divider />
-      </v-list>
-      <v-list nav subheader>
-        <v-subheader>
-          グループ一覧
-        </v-subheader>
-        <v-list-item
-          v-for="group in groupList"
-          :key="group.id"
-          :to="'/group/' + group.id"
-          link
-        >
-          <v-list-item-icon>
-            <v-icon>
-              mdi-wallet
-            </v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            {{ group.title }}
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-app-bar app>
+    <v-app-bar app clipped-left elevation="1">
       <v-app-bar-nav-icon @click="state.drawer = !state.drawer" />
+      ShareWallet
       <v-spacer />
+      <v-btn v-if="state.isAuthenticated" icon to="/auth/logout">
+        <v-icon>
+          mdi-logout-variant
+        </v-icon>
+      </v-btn>
+      <v-btn v-else icon to="/auth/login">
+        <v-icon>
+          mdi-login-variant
+        </v-icon>
+      </v-btn>
     </v-app-bar>
+    <v-navigation-drawer v-model="state.drawer" app clipped>
+      <div v-for="(list, listIndex) in drawerList" :key="`list-${listIndex}`">
+        <v-divider v-if="listIndex !== 0" />
+        <v-list dense nav :subheader="typeof list.subheader !== 'undefined'">
+          <v-subheader v-if="typeof list.subheader !== 'undefined'">
+            {{ list.subheader }}
+          </v-subheader>
+          <v-list-item-group>
+            <v-list-item
+              v-for="(item, itemIndex) in list.items"
+              :key="`list-${itemIndex}`"
+              link
+              :to="item.to"
+              active-class="primary--text"
+            >
+              <v-list-item-icon v-if="typeof item.icon !== 'undefined'">
+                <v-icon>
+                  {{ item.icon }}
+                </v-icon>
+              </v-list-item-icon>
+              <v-list-item-avatar v-if="typeof item.img !== 'undefined'">
+                <v-img :src="item.img" />
+              </v-list-item-avatar>
+              <v-list-item-content>
+                {{ item.text }}
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </div>
+    </v-navigation-drawer>
     <v-content>
       <nuxt />
     </v-content>
@@ -65,27 +56,44 @@
 import { reactive, defineComponent, computed } from '@vue/composition-api'
 import { groupStore } from '@/store'
 
-interface NavigationMenu {
-  icon: string
-  text: string
-  to: string
+interface IDrawerList {
+  subheader?: string
+  items: {
+    text: string
+    to: string
+    icon?: string
+    img?: string
+  }[]
 }
 
 export default defineComponent({
-  setup() {
+  setup(_, { root: { $firebase } }) {
     const state = reactive({
-      drawer: true
+      drawer: null,
+      isAuthenticated: $firebase.auth().currentUser !== null
     })
 
-    const navigationMenu = [
-      { icon: 'mdi-home', text: 'ホーム', to: '/' }
-    ] as NavigationMenu[]
-    const groupList = computed(() => groupStore.list)
+    const drawerList = [
+      {
+        items: [{ text: 'ホーム', to: '/', icon: 'mdi-home' }]
+      },
+      {
+        subheader: 'グループ',
+        items: computed(() =>
+          groupStore.list.map((group) => {
+            return {
+              text: group.title,
+              to: `/group/${group.id}`,
+              icon: 'mdi-wallet'
+            }
+          })
+        ).value
+      }
+    ] as IDrawerList[]
 
     return {
       state,
-      navigationMenu,
-      groupList
+      drawerList
     }
   }
 })

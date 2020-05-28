@@ -1,9 +1,9 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12">
+      <v-col>
         <v-alert type="error">
-          {{ message }}
+          [{{ error.statusCode }}] {{ error.message }}
         </v-alert>
       </v-col>
     </v-row>
@@ -13,14 +13,6 @@
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
 
-interface IProps {
-  error: {
-    statusCode: number
-    message?: string
-    string?: string
-  }
-}
-
 export default defineComponent({
   props: {
     error: {
@@ -28,21 +20,9 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props: IProps) {
-    const message = (() => {
-      if (typeof props.error.message !== 'undefined') {
-        return props.error.message
-      }
-      switch (props.error.statusCode) {
-        case 404:
-          return 'ページがありません'
-        default:
-          return '何らかのエラーが発生しました'
-      }
-    })()
-
+  setup({ error }) {
     return {
-      message
+      error
     }
   }
 })

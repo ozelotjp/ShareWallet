@@ -30,7 +30,7 @@
   },
   "postCreateCommand": "apk add git bash",
   // Docker-Compose
-  "dockerComposeFile": "docker-compose.yml",
+  "dockerComposeFile": "../docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/app"
 }
