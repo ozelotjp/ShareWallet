@@ -6,54 +6,53 @@
       </v-col>
     </v-row>
     <v-row>
+      <v-col cols="12" md="6">
+        <v-card>
+          <v-card-text>
+            <v-row>
+              <v-col>
+                <h2>メールアドレス・パスワード</h2>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-text-field
+                  v-model="signInWithEmailAndPasswordField.email"
+                  label="メールアドレス"
+                  type="email"
+                  outlined
+                />
+                <v-text-field
+                  v-model="signInWithEmailAndPasswordField.password"
+                  label="パスワード"
+                  type="password"
+                  outlined
+                />
+                <v-btn
+                  block
+                  color="primary"
+                  @click="signInWithEmailAndPassword"
+                >
+                  ログイン
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
       <v-col>
         <v-card>
           <v-card-text>
             <v-row>
-              <v-col cols="12" md="6">
-                <v-row>
-                  <v-col>
-                    <h2>メールアドレス・パスワード</h2>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-text-field
-                      v-model="signInWithEmailAndPasswordField.email"
-                      label="メールアドレス"
-                      type="email"
-                      outlined
-                    />
-                    <v-text-field
-                      v-model="signInWithEmailAndPasswordField.password"
-                      label="パスワード"
-                      type="password"
-                      outlined
-                    />
-                    <v-btn
-                      block
-                      color="primary"
-                      @click="signInWithEmailAndPassword"
-                    >
-                      ログイン
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </v-col>
-              <v-divider vertical />
               <v-col>
-                <v-row>
-                  <v-col>
-                    <h2>SNSアカウントでログイン</h2>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-btn block color="primary" @click="signInWithGoogle">
-                      Googleでログイン
-                    </v-btn>
-                  </v-col>
-                </v-row>
+                <h2>SNSアカウントでログイン</h2>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-btn block color="primary" @click="signInWithGoogle">
+                  Googleでログイン
+                </v-btn>
               </v-col>
             </v-row>
           </v-card-text>

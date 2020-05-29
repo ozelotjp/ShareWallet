@@ -74,7 +74,7 @@
             block
             @click="revertTransaction"
           >
-            取り消し
+            取消
           </v-btn>
         </v-col>
         <v-col cols="6">

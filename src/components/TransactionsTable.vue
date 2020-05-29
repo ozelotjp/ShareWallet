@@ -37,7 +37,7 @@
         </v-chip>
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-btn @click="showTransactionDialog(item.id)">
+        <v-btn block @click="showTransactionDialog(item.id)">
           詳細
         </v-btn>
       </template>

@@ -1,7 +1,15 @@
 <template>
   <v-container>
     <v-row>
-      <v-col v-for="group in groupList" :key="group.id" cols="4">
+      <v-col
+        v-for="group in groupList"
+        :key="group.id"
+        cols="12"
+        sm="6"
+        md="4"
+        lg="4"
+        xl="3"
+      >
         <v-card>
           <v-card-title>
             {{ group.title }}
@@ -19,7 +27,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="4">
+      <v-col cols="12" sm="6" md="4" lg="4" xl="3">
         <v-card color="grey lighten-1">
           <v-card-title>
             グループを作成

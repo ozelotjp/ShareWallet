@@ -45,6 +45,32 @@
           </v-list-item-group>
         </v-list>
       </div>
+      <div>
+        <v-divider />
+        <v-list dense nav>
+          <v-subheader>
+            グループ
+          </v-subheader>
+          <v-list-item-group>
+            <v-list-item
+              v-for="(item, itemIndex) in groupList"
+              :key="`list-${itemIndex}`"
+              link
+              :to="`/group/${item.id}`"
+              active-class="primary--text"
+            >
+              <v-list-item-icon>
+                <v-icon>
+                  mdi-wallet
+                </v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                {{ item.title }}
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </div>
     </v-navigation-drawer>
     <v-content>
       <nuxt />
@@ -73,29 +99,18 @@ export default defineComponent({
       isAuthenticated: $firebase.auth().currentUser !== null
     })
 
-    const groupList = computed(() => {
-      return groupStore.list.map((group) => {
-        return {
-          text: group.title,
-          to: `/group/${group.id}`,
-          icon: 'mdi-wallet'
-        }
-      })
-    })
-
     const drawerList = [
       {
         items: [{ text: 'ホーム', to: '/', icon: 'mdi-home' }]
-      },
-      {
-        subheader: 'グループ',
-        items: groupList.value
       }
     ] as IDrawerList[]
 
+    const groupList = computed(() => groupStore.list)
+
     return {
       state,
-      drawerList
+      drawerList,
+      groupList
     }
   }
 })
