@@ -73,21 +73,23 @@ export default defineComponent({
       isAuthenticated: $firebase.auth().currentUser !== null
     })
 
+    const groupList = computed(() => {
+      return groupStore.list.map((group) => {
+        return {
+          text: group.title,
+          to: `/group/${group.id}`,
+          icon: 'mdi-wallet'
+        }
+      })
+    })
+
     const drawerList = [
       {
         items: [{ text: 'ホーム', to: '/', icon: 'mdi-home' }]
       },
       {
         subheader: 'グループ',
-        items: computed(() =>
-          groupStore.list.map((group) => {
-            return {
-              text: group.title,
-              to: `/group/${group.id}`,
-              icon: 'mdi-wallet'
-            }
-          })
-        ).value
+        items: groupList.value
       }
     ] as IDrawerList[]
 
