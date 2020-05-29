@@ -86,5 +86,10 @@ export default {
     typeCheck: {
       eslint: true
     }
+  },
+  watchers: {
+    webpack: {
+      poll: true
+    }
   }
 }
