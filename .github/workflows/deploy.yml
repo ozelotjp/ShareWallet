@@ -31,6 +31,9 @@ jobs:
           yarn install --frozen-lockfile --cwd functions
           npm i -g firebase-tools
 
+      - name: Set the API key for firebase
+        run: cp config/.env.example config/.env
+
       - name: Generate
         run: yarn run generate
 
