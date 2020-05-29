@@ -89,7 +89,7 @@ export default defineComponent({
         .collection('group')
         .doc(group.id)
         .collection('transactions')
-        .limit(10)
+        .limit(100)
         .orderBy('createdAt', 'desc')
         .onSnapshot((snapshot) => {
           transactions.value = snapshot.docs.map((transaction) => {
